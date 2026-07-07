@@ -52,14 +52,14 @@ func NewStripCmd(fs afero.Fs, homeDir paths.HomeDirFunc, in io.Reader) *cobra.Co
 					return err
 				}
 
-				fmt.Fprintf(cmd.OutOrStdout(), "== plan for %s (%s) ==\n", t, configRoot)
-				fmt.Fprint(cmd.OutOrStdout(), inventory.Format(plan))
+				_, _ = fmt.Fprintf(cmd.OutOrStdout(), "== plan for %s (%s) ==\n", t, configRoot)
+				_, _ = fmt.Fprint(cmd.OutOrStdout(), inventory.Format(plan))
 
 				if len(plan.Entries) == 0 || dryRun {
 					continue
 				}
 				if !yes && !confirm(cmd.OutOrStdout(), reader) {
-					fmt.Fprintln(cmd.OutOrStdout(), "aborted")
+					_, _ = fmt.Fprintln(cmd.OutOrStdout(), "aborted")
 					continue
 				}
 
@@ -69,7 +69,7 @@ func NewStripCmd(fs afero.Fs, homeDir paths.HomeDirFunc, in io.Reader) *cobra.Co
 				if err := strip.Run(fs, plan); err != nil {
 					return err
 				}
-				fmt.Fprintf(cmd.OutOrStdout(), "stripped %s\n", t)
+				_, _ = fmt.Fprintf(cmd.OutOrStdout(), "stripped %s\n", t)
 			}
 			return nil
 		},
@@ -83,7 +83,7 @@ func NewStripCmd(fs afero.Fs, homeDir paths.HomeDirFunc, in io.Reader) *cobra.Co
 }
 
 func confirm(w io.Writer, r *bufio.Reader) bool {
-	fmt.Fprint(w, "proceed with backup + strip? [y/N]: ")
+	_, _ = fmt.Fprint(w, "proceed with backup + strip? [y/N]: ")
 	line, _ := r.ReadString('\n')
 	line = strings.TrimSpace(strings.ToLower(line))
 	return line == "y" || line == "yes"

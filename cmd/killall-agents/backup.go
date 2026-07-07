@@ -73,7 +73,7 @@ func runBackup(w io.Writer, fs afero.Fs, homeDir paths.HomeDirFunc, t manifest.T
 		return backup.Manifest{}, "", err
 	}
 
-	fmt.Fprintf(w, "backed up %s -> %s\n", t, backupDir)
+	_, _ = fmt.Fprintf(w, "backed up %s -> %s\n", t, backupDir)
 	return man, backupDir, nil
 }
 

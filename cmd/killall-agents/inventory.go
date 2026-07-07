@@ -40,8 +40,8 @@ func NewInventoryCmd(fs afero.Fs, homeDir paths.HomeDirFunc) *cobra.Command {
 				if err != nil {
 					return err
 				}
-				fmt.Fprintf(cmd.OutOrStdout(), "== %s (%s) ==\n", t, configRoot)
-				fmt.Fprint(cmd.OutOrStdout(), inventory.Format(plan))
+				_, _ = fmt.Fprintf(cmd.OutOrStdout(), "== %s (%s) ==\n", t, configRoot)
+				_, _ = fmt.Fprint(cmd.OutOrStdout(), inventory.Format(plan))
 			}
 			return nil
 		},

@@ -35,7 +35,7 @@ func NewListBackupsCmd(fs afero.Fs, homeDir paths.HomeDirFunc) *cobra.Command {
 					return err
 				}
 				for _, e := range entries {
-					fmt.Fprintf(cmd.OutOrStdout(), "%s\t%s\n", t, e.Name())
+					_, _ = fmt.Fprintf(cmd.OutOrStdout(), "%s\t%s\n", t, e.Name())
 				}
 			}
 			return nil

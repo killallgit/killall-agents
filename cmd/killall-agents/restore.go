@@ -48,7 +48,7 @@ func NewRestoreCmd(fs afero.Fs, homeDir paths.HomeDirFunc) *cobra.Command {
 			if err := restore.Run(fs, m, backupDir); err != nil {
 				return err
 			}
-			fmt.Fprintf(cmd.OutOrStdout(), "restored %s from %s\n", t, backupDir)
+			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "restored %s from %s\n", t, backupDir)
 			return nil
 		},
 	}
