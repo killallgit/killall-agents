@@ -46,6 +46,24 @@ func TestBuildUsesInstructionRootForMemoryStyleCategory(t *testing.T) {
 	require.Equal(t, "/proj/CLAUDE.md", plan.Entries[0].SourcePath)
 }
 
+func TestBuildInstructionRootRelPathDoesNotEscapeInProjectScope(t *testing.T) {
+	fs := afero.NewMemMapFs()
+	require.NoError(t, afero.WriteFile(fs, "/proj/CLAUDE.md", []byte("hi"), 0o644))
+
+	m := manifest.ToolManifest{
+		Tool: manifest.ToolClaude,
+		Categories: []manifest.Category{
+			{Name: "memory", Paths: []manifest.PathSpec{{Base: manifest.BaseInstruction, Rel: "CLAUDE.md"}}},
+		},
+	}
+
+	plan, err := planner.Build(m, fs, "/proj/.claude", "/proj")
+	require.NoError(t, err)
+	require.Len(t, plan.Entries, 1)
+	require.Equal(t, "CLAUDE.md", plan.Entries[0].RelPath)
+	require.NotContains(t, plan.Entries[0].RelPath, "..")
+}
+
 func TestBuildRecordsExcludesRelativeToSource(t *testing.T) {
 	fs := afero.NewMemMapFs()
 	require.NoError(t, fs.MkdirAll("/home/u/.codex/skills/.system", 0o755))

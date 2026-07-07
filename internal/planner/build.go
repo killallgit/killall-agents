@@ -28,9 +28,15 @@ func Build(m manifest.ToolManifest, fs afero.Fs, configRoot, instructionRoot str
 				continue
 			}
 
-			rel, err := filepath.Rel(configRoot, abs)
-			if err != nil {
-				return Plan{}, fmt.Errorf("computing relative path for %s: %w", abs, err)
+			var rel string
+			if ps.Base == manifest.BaseInstruction {
+				rel = ps.Rel
+			} else {
+				r, err := filepath.Rel(configRoot, abs)
+				if err != nil {
+					return Plan{}, fmt.Errorf("computing relative path for %s: %w", abs, err)
+				}
+				rel = r
 			}
 
 			plan.Entries = append(plan.Entries, Entry{
