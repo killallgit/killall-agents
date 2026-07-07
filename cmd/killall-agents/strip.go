@@ -28,6 +28,7 @@ func NewStripCmd(fs afero.Fs, homeDir paths.HomeDirFunc, in io.Reader) *cobra.Co
 			if err != nil {
 				return err
 			}
+			reader := bufio.NewReader(in)
 			for _, t := range tools {
 				m, err := manifest.Lookup(t)
 				if err != nil {
@@ -57,7 +58,7 @@ func NewStripCmd(fs afero.Fs, homeDir paths.HomeDirFunc, in io.Reader) *cobra.Co
 				if len(plan.Entries) == 0 || dryRun {
 					continue
 				}
-				if !yes && !confirm(cmd.OutOrStdout(), in) {
+				if !yes && !confirm(cmd.OutOrStdout(), reader) {
 					fmt.Fprintln(cmd.OutOrStdout(), "aborted")
 					continue
 				}
@@ -81,9 +82,9 @@ func NewStripCmd(fs afero.Fs, homeDir paths.HomeDirFunc, in io.Reader) *cobra.Co
 	return cmd
 }
 
-func confirm(w io.Writer, in io.Reader) bool {
+func confirm(w io.Writer, r *bufio.Reader) bool {
 	fmt.Fprint(w, "proceed with backup + strip? [y/N]: ")
-	line, _ := bufio.NewReader(in).ReadString('\n')
+	line, _ := r.ReadString('\n')
 	line = strings.TrimSpace(strings.ToLower(line))
 	return line == "y" || line == "yes"
 }
