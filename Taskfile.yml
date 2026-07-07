@@ -1,0 +1,30 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build the killall-agents binary
+    cmds:
+      - go build -o bin/killall-agents ./cmd/killall-agents
+
+  test:
+    desc: Run tests with race detector and coverage
+    cmds:
+      - go test ./... -race -cover
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run
+
+  fmt:
+    desc: Check gofmt formatting
+    cmds:
+      - test -z "$(gofmt -l .)"
+
+  ci:
+    desc: Everything CI runs
+    cmds:
+      - task: fmt
+      - task: lint
+      - task: test
+      - task: build
