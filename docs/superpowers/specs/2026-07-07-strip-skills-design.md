@@ -1,8 +1,11 @@
-# strip-skills: backup and strip Claude Code / Codex customization
+# Cold Turkey: backup and strip Claude Code / Codex customization
 
 - Status: Approved
 - Date: 2026-07-07
 - Module: `github.com/killallgit/strip-skills`
+- Binary: `turkey`
+
+Project name is "Cold Turkey" (quitting your plugin/skill habit cold turkey); repo and module keep the `strip-skills` name, the CLI binary is `turkey`. Note: there's an unrelated existing app called "Cold Turkey" (a website blocker) — different product category, not a real collision risk for a personal CLI tool, but worth knowing if this is ever published under that name.
 
 ## Problem
 
@@ -47,7 +50,7 @@ Each tool declares its own fixed list of categories and the concrete paths they 
 | `settings` | `<root>/settings.json`, `<root>/settings.local.json` | delete file(s) |
 | `memory` | `<root-parent>/CLAUDE.md` (project) or `<root>/CLAUDE.md` (global) | delete file |
 
-Never referenced by any category (and therefore never touched): `.credentials.json`, `projects/`, `sessions/`, `history.jsonl`, `file-history/`, `session-env/`, `shell-snapshots/`, `paste-cache/`, `telemetry/`, `usage-data/`, `daemon*`, `ide/`, `jobs/`, `debug/`, `cache/`, `config/`, `backups/`, `policy-limits.json`, `remote-settings.json`, `.last-*`, `.DS_Store`, and `strip-skills-backups/` itself.
+Never referenced by any category (and therefore never touched): `.credentials.json`, `projects/`, `sessions/`, `history.jsonl`, `file-history/`, `session-env/`, `shell-snapshots/`, `paste-cache/`, `telemetry/`, `usage-data/`, `daemon*`, `ide/`, `jobs/`, `debug/`, `cache/`, `config/`, `backups/`, `policy-limits.json`, `remote-settings.json`, `.last-*`, `.DS_Store`, and `turkey-backups/` itself.
 
 ### Codex CLI (`<root>` = `~/.codex` or `<project>/.codex`)
 
@@ -69,11 +72,11 @@ Vendor-exclude paths (like Codex's `skills/.system`) are a per-category `exclude
 ## Commands
 
 ```
-strip-skills inventory --tool claude|codex|all [--project <path>]
-strip-skills backup    --tool claude|codex|all [--categories skills,agents,...] [--project <path>]
-strip-skills strip     --tool claude|codex|all [--categories ...] [--project <path>] [--dry-run] [--yes]
-strip-skills restore   --tool claude|codex --from <backup-id|path> [--categories ...]
-strip-skills list-backups --tool claude|codex|all
+turkey inventory --tool claude|codex|all [--project <path>]
+turkey backup    --tool claude|codex|all [--categories skills,agents,...] [--project <path>]
+turkey strip     --tool claude|codex|all [--categories ...] [--project <path>] [--dry-run] [--yes]
+turkey restore   --tool claude|codex --from <backup-id|path> [--categories ...]
+turkey list-backups --tool claude|codex|all
 ```
 
 - `inventory` scans and prints what exists per category, no writes.
@@ -84,12 +87,12 @@ strip-skills list-backups --tool claude|codex|all
 
 ## Backup format
 
-`~/.claude/strip-skills-backups/<tool>-<timestamp>/` (chosen location: colocated with the tool's own config dir, per explicit user decision — the backup dir itself is never a member of any category manifest, so it cannot be swept up by a later strip run).
+`~/.claude/turkey-backups/<tool>-<timestamp>/` (chosen location: colocated with the tool's own config dir, per explicit user decision — the backup dir itself is never a member of any category manifest, so it cannot be swept up by a later strip run).
 
 Layout mirrors the original relative tree exactly:
 
 ```
-~/.claude/strip-skills-backups/claude-20260707-143000/
+~/.claude/turkey-backups/claude-20260707-143000/
   manifest.json
   skills/codebase-memory/...
   agents/...
@@ -121,7 +124,7 @@ Layout mirrors the original relative tree exactly:
 Functional core / imperative shell, since Go is neither pure-OOP nor pure-FP and the literal combination of "SOLID" and "functional paradigms" needs a concrete idiom to mean something in Go:
 
 ```
-cmd/strip-skills/       cobra command wiring only, no business logic
+cmd/turkey/             cobra command wiring only, no business logic
 internal/manifest/      pure data: per-tool category definitions (immutable structs)
 internal/planner/        pure function: Build(manifest, fs) -> Plan. No side effects.
 internal/fsutil/         small interfaces (Copier, Deleter, Lister) over afero.Fs
