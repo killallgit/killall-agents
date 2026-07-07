@@ -15,5 +15,6 @@ func NewRootCmd(fs afero.Fs, homeDir paths.HomeDirFunc, in io.Reader) *cobra.Com
 		Short: "Backup and strip Claude Code / Codex customization",
 	}
 	root.AddCommand(NewInventoryCmd(fs, homeDir))
+	root.AddCommand(NewBackupCmd(fs, homeDir))
 	return root
 }
