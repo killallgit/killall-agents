@@ -1,11 +1,11 @@
-# Cold Turkey: backup and strip Claude Code / Codex customization
+# killall-agents: backup and strip Claude Code / Codex customization
 
 - Status: Approved
 - Date: 2026-07-07
-- Module: `github.com/killallgit/strip-skills`
-- Binary: `turkey`
+- Module: `github.com/killallgit/killall-agents`
+- Binary: `killall-agents`
 
-Project name is "Cold Turkey" (quitting your plugin/skill habit cold turkey); repo and module keep the `strip-skills` name, the CLI binary is `turkey`. Note: there's an unrelated existing app called "Cold Turkey" (a website blocker) — different product category, not a real collision risk for a personal CLI tool, but worth knowing if this is ever published under that name.
+Project and repo are named `killall-agents`, matching the org's naming theme. Local working directory keeps the `strip-skills` name for now (will be moved into the actual `killall-agents` repo later); module path and binary already use `killall-agents`.
 
 ## Problem
 
@@ -50,7 +50,7 @@ Each tool declares its own fixed list of categories and the concrete paths they 
 | `settings` | `<root>/settings.json`, `<root>/settings.local.json` | delete file(s) |
 | `memory` | `<root-parent>/CLAUDE.md` (project) or `<root>/CLAUDE.md` (global) | delete file |
 
-Never referenced by any category (and therefore never touched): `.credentials.json`, `projects/`, `sessions/`, `history.jsonl`, `file-history/`, `session-env/`, `shell-snapshots/`, `paste-cache/`, `telemetry/`, `usage-data/`, `daemon*`, `ide/`, `jobs/`, `debug/`, `cache/`, `config/`, `backups/`, `policy-limits.json`, `remote-settings.json`, `.last-*`, `.DS_Store`, and `turkey-backups/` itself.
+Never referenced by any category (and therefore never touched): `.credentials.json`, `projects/`, `sessions/`, `history.jsonl`, `file-history/`, `session-env/`, `shell-snapshots/`, `paste-cache/`, `telemetry/`, `usage-data/`, `daemon*`, `ide/`, `jobs/`, `debug/`, `cache/`, `config/`, `backups/`, `policy-limits.json`, `remote-settings.json`, `.last-*`, `.DS_Store`, and `killall-agents-backups/` itself.
 
 ### Codex CLI (`<root>` = `~/.codex` or `<project>/.codex`)
 
@@ -72,11 +72,11 @@ Vendor-exclude paths (like Codex's `skills/.system`) are a per-category `exclude
 ## Commands
 
 ```
-turkey inventory --tool claude|codex|all [--project <path>]
-turkey backup    --tool claude|codex|all [--categories skills,agents,...] [--project <path>]
-turkey strip     --tool claude|codex|all [--categories ...] [--project <path>] [--dry-run] [--yes]
-turkey restore   --tool claude|codex --from <backup-id|path> [--categories ...]
-turkey list-backups --tool claude|codex|all
+killall-agents inventory --tool claude|codex|all [--project <path>]
+killall-agents backup    --tool claude|codex|all [--categories skills,agents,...] [--project <path>]
+killall-agents strip     --tool claude|codex|all [--categories ...] [--project <path>] [--dry-run] [--yes]
+killall-agents restore   --tool claude|codex --from <backup-id|path> [--categories ...]
+killall-agents list-backups --tool claude|codex|all
 ```
 
 - `inventory` scans and prints what exists per category, no writes.
@@ -87,12 +87,12 @@ turkey list-backups --tool claude|codex|all
 
 ## Backup format
 
-`~/.claude/turkey-backups/<tool>-<timestamp>/` (chosen location: colocated with the tool's own config dir, per explicit user decision — the backup dir itself is never a member of any category manifest, so it cannot be swept up by a later strip run).
+`~/.claude/killall-agents-backups/<tool>-<timestamp>/` (chosen location: colocated with the tool's own config dir, per explicit user decision — the backup dir itself is never a member of any category manifest, so it cannot be swept up by a later strip run).
 
 Layout mirrors the original relative tree exactly:
 
 ```
-~/.claude/turkey-backups/claude-20260707-143000/
+~/.claude/killall-agents-backups/claude-20260707-143000/
   manifest.json
   skills/codebase-memory/...
   agents/...
@@ -124,7 +124,7 @@ Layout mirrors the original relative tree exactly:
 Functional core / imperative shell, since Go is neither pure-OOP nor pure-FP and the literal combination of "SOLID" and "functional paradigms" needs a concrete idiom to mean something in Go:
 
 ```
-cmd/turkey/             cobra command wiring only, no business logic
+cmd/killall-agents/     cobra command wiring only, no business logic
 internal/manifest/      pure data: per-tool category definitions (immutable structs)
 internal/planner/        pure function: Build(manifest, fs) -> Plan. No side effects.
 internal/fsutil/         small interfaces (Copier, Deleter, Lister) over afero.Fs
@@ -137,6 +137,7 @@ internal/inventory/      pure formatting of a Plan/scan result for CLI output
 - **SRP**: planning, executing, and reporting are separate packages.
 - **OCP**: adding a third tool (or a new category) means adding manifest data; `planner`/`backup`/`strip`/`restore` do not change.
 - **ISP/DIP**: business logic depends on small interfaces (`Copier`, `Deleter`) backed by `afero.Fs`, not concrete `os` calls — real filesystem in production, `afero.MemMapFs` in tests. `planner.Build` is a pure function over an `afero.Fs` snapshot, fully unit-testable without touching real disk.
+- **Small, single-purpose modules over indirection**: prefer many small packages/files with one clear job over fewer packages with clever generic abstractions. If a package needs a paragraph to explain what it's for, split it. No abstraction layers introduced for a single caller.
 
 ### Libraries
 
