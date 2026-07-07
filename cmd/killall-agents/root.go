@@ -16,5 +16,6 @@ func NewRootCmd(fs afero.Fs, homeDir paths.HomeDirFunc, in io.Reader) *cobra.Com
 	}
 	root.AddCommand(NewInventoryCmd(fs, homeDir))
 	root.AddCommand(NewBackupCmd(fs, homeDir))
+	root.AddCommand(NewStripCmd(fs, homeDir, in))
 	return root
 }
