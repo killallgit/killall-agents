@@ -2,7 +2,7 @@
 name: reviewer
 description: Lane agent started only by the orchestrator. Reviews one lane's diff against its spec and returns PASS or CHANGES. Changes no code.
 claude_tools: Read, Grep, Glob, Bash, Skill
-claude_model: opus
+claude_model: sonnet
 claude_effort: high
 codex_model: gpt-6.1-sol
 codex_effort: high
