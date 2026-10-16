@@ -1,13 +1,13 @@
 ---
 name: agent-setup
-description: Set up, or remove, an orchestrator session role plus grunt, builder, reviewer, and hall-monitor agents in a repository for Claude Code, Codex, and Cursor.
+description: Set up, or remove, an orchestrator session role plus planner, grunt, builder, reviewer, and hall-monitor agents in a repository for Claude Code, Codex, and Cursor.
 disable-model-invocation: true
 argument-hint: "[remove] [path]"
 ---
 
 # Agent setup
 
-Give a repository an orchestrator every session starts as, its three lane agents, and grunt, rendered from `templates/` with this repository's values.
+Give a repository an orchestrator every session starts as, a planner, its three lane agents, and grunt, rendered from `templates/` with this repository's values.
 
 When the first argument is `remove`, run `python3 scripts/render_agents.py --dest <git-root> --remove` from this skill's directory and report what it removed.
 

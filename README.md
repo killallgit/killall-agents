@@ -41,11 +41,12 @@ Claude Code loads these from the plugin. Mention `@agent-killall-agents:git-jani
 
 ## Project setup
 
-Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex. Setup discovers the project's checks and worktree conventions and writes an orchestrator plus grunt, builder, reviewer and lane hall-monitor definitions. The catalog hall-monitor and lane hall-monitor are separate agents.
+Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex. Setup discovers the project's checks and worktree conventions and writes an orchestrator plus planner, grunt, builder, reviewer and lane hall-monitor definitions. The catalog hall-monitor and lane hall-monitor are separate agents.
 
 | Role | Claude model / effort | Codex model / effort |
 | --- | --- | --- |
-| Orchestrator | Opus / high | `gpt-6-astra` / high |
+| Orchestrator (project manager) | Sonnet / medium | `gpt-6.1-sol` / medium |
+| Planner | Opus / high | `gpt-6-astra` / high |
 | Grunt (relays to Pi) | Haiku / low | `gpt-6-luna` / low |
 | Builder | Sonnet / medium | `gpt-6.1-sol` / medium |
 | Reviewer | Sonnet / high | `gpt-6.1-sol` / high |
@@ -53,7 +54,7 @@ Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex. Se
 
 One [template per role](skills/agent-setup/templates/) holds host settings; the [renderer](skills/agent-setup/scripts/render_agents.py) writes Claude Markdown, Codex TOML and Cursor Markdown/rules. Claude starts via the `agent` setting in `.claude/settings.json`, Codex via the managed block in `.codex/config.toml` for a trusted project, and Cursor via an always-applied rule. Cursor inherits its session model.
 
-The orchestrator sends tasks that fit a 64K-token context to grunt, a thin wrapper that runs the local [Pi](https://github.com/earendil-works/pi) agent with Pi's default provider and model, and larger implementation to builders. Grunt needs `pi` on `PATH` with a ready provider. Claude's tool allowlist permits reading, searching and delegation; Codex and Cursor enforce delegation by instruction. Codex subagents inherit the session's permissions. Builders create worktrees; reviewers independently run checks and report evidence. Builders and hall-monitors require the included `follow-the-rules` skill to resolve on the host.
+The orchestrator is the project manager: it asks the read-only planner for a lane plan and re-plans through it, then runs and tracks the lanes. It sends tasks that fit a 64K-token context to grunt, a thin wrapper that runs the local [Pi](https://github.com/earendil-works/pi) agent with Pi's default provider and model, and larger implementation to builders. Grunt needs `pi` on `PATH` with a ready provider. Claude's tool allowlist permits reading, searching and delegation; Codex and Cursor enforce delegation by instruction. Codex subagents inherit the session's permissions. Builders create worktrees; reviewers independently run checks and report evidence. Builders and hall-monitors require the included `follow-the-rules` skill to resolve on the host.
 
 Rerun setup after updating the installed plugin to refresh owned definitions. Local edits to generated files are replaced; unrelated settings remain intact. Foreign settings require explicit approval before `--force`. Generated paths are locally excluded through `.git/info/exclude`; already-tracked files stay tracked.
 
