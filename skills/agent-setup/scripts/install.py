@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -22,6 +23,10 @@ ENTRY = "You are this project's orchestrator when you are the top-level session,
 ENTRIES = {"claude": Path("CLAUDE.local.md"), "codex": Path(".codex/config.toml"), "cursor": Path(".cursor/rules/killall-orchestrator.mdc")}
 CURSOR_RULE = f"---\ndescription: This project's orchestrator\nalwaysApply: true\n---\n\n{ENTRY}\n\n<!-- killall-agents -->\n"
 CODEX_SETTING = "developer_instructions = '''\n" + ENTRY + "\n'''\n"
+# agent-setup 2.0 put this line in the user-wide instructions; the project entry replaces it.
+GLOBAL_ENTRY = "When you are the top-level session, not an agent another agent started, and this project has the `planner` and `builder` agents, you are its orchestrator: load the `orchestrate` skill before multi-step work."
+# Each host's user-wide folder and the variable that moves it.
+HOMES = {"claude": "CLAUDE_CONFIG_DIR", "codex": "CODEX_HOME", "cursor": None}
 
 
 def ours(path: Path) -> bool:
@@ -48,8 +53,17 @@ def set_block(path: Path, body: str, comment: str = "# {}", first: bool = False)
         path.unlink()
 
 
+def home(host: str) -> Path:
+    variable = HOMES[host]
+    return Path(variable and os.environ.get(variable) or Path.home() / f".{host}")
+
+
 def clear_legacy(dest: Path) -> None:
-    """Undoes agent-setup 1.x's orchestrator session setting; set_block strips its marked blocks."""
+    """Undoes agent-setup 1.x's orchestrator session setting and 2.0's user-wide line; set_block strips 1.x's marked blocks."""
+    for path in (home("claude") / "CLAUDE.md", home("codex") / "AGENTS.md"):
+        text = path.read_text(encoding="utf-8") if path.is_file() else ""
+        if GLOBAL_ENTRY in text:
+            path.write_text(re.sub(r"\n*^" + re.escape(GLOBAL_ENTRY) + r"$\n?", "\n", text, flags=re.MULTILINE).lstrip("\n"), encoding="utf-8")
     settings = dest / ".claude/settings.json"
     data = json.loads(settings.read_text(encoding="utf-8") or "{}") if settings.is_file() else {}
     if data.get("agent") == "orchestrator":
@@ -68,6 +82,8 @@ def main() -> None:
     hosts = [] if args.remove else args.hosts.split(",")
     if unknown := set(hosts) - set(FOLDERS):
         raise SystemExit(f"unknown hosts: {', '.join(sorted(unknown))}")
+    if shared := [host for host in FOLDERS if (dest / f".{host}").resolve() == home(host).resolve()]:
+        raise SystemExit(f"{dest}/.{shared[0]} is the user-wide {NAMES[shared[0]]} folder; run setup in a project's git root")
     copies = {FOLDERS[host] / source.name: source.read_text(encoding="utf-8") for host in hosts for source in sorted((FACTORY / host).glob("*"))}
     if "cursor" in hosts:
         copies[ENTRIES["cursor"]] = CURSOR_RULE

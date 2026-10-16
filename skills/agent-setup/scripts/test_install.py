@@ -1,5 +1,6 @@
 """Checks install.py against a throwaway Git repository."""
 
+import os
 import subprocess
 import sys
 import tempfile
@@ -8,12 +9,19 @@ from pathlib import Path
 INSTALL = Path(__file__).resolve().parent / "install.py"
 
 
-def run(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run([sys.executable, str(INSTALL), "--dest", str(repo), *args], capture_output=True, text=True)
+def run(repo: Path, *args: str, **env: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run([sys.executable, str(INSTALL), "--dest", str(repo), *args], capture_output=True, text=True, env=os.environ | env)
 
 
 def main() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as user:
+        # The user-wide folders live in a second directory so the checks never touch the real ones.
+        os.environ.update(HOME=user, CLAUDE_CONFIG_DIR=f"{user}/.claude", CODEX_HOME=f"{user}/.codex")
+        line = "When you are the top-level session, not an agent another agent started, and this project has the `planner` and `builder` agents, you are its orchestrator: load the `orchestrate` skill before multi-step work.\n"
+        for path, text in (("CLAUDE.md", f"Mine.\n\n{line}"), ("AGENTS.md", f"{line}\nTheirs.\n")):
+            folder = Path(user, ".claude" if path == "CLAUDE.md" else ".codex")
+            folder.mkdir()
+            (folder / path).write_text(text)
         repo = Path(tmp)
         subprocess.run(["git", "init", "-q", str(repo)], check=True)
         exclude = repo / ".git/info/exclude"
@@ -30,7 +38,11 @@ def main() -> None:
         with exclude.open("a") as file:
             file.write("# agent-setup:start\n/.claude/agents/orchestrator.md\n# agent-setup:end\n")
 
+        assert run(repo, CODEX_HOME=str(repo / ".codex")).returncode != 0, "installed into the user-wide Codex folder"
+        assert not (repo / ".codex/agents").exists()
         assert run(repo).returncode == 0
+        assert Path(user, ".claude/CLAUDE.md").read_text() == "Mine.\n"
+        assert Path(user, ".codex/AGENTS.md").read_text() == "Theirs.\n"
         for path in (".claude/agents/builder.md", ".codex/agents/planner.toml", ".cursor/agents/grunt.md"):
             assert (repo / path).is_file(), path
         assert not (repo / ".claude/agents/orchestrator.md").exists(), "old agent-setup output stays"
