@@ -19,6 +19,8 @@ HOSTS = {"claude": ".claude/agents/{}.md", "cursor": ".cursor/agents/{}.md", "co
 CLAUDE_SETTINGS = Path(".claude/settings.json")
 CODEX_CONFIG = Path(".codex/config.toml")
 CURSOR_RULE = Path(".cursor/rules/orchestrator.mdc")
+# Claude Code copies the ignored files listed here into each worktree it creates.
+WORKTREE_INCLUDE = Path(".worktreeinclude")
 LEGACY_FILES = (Path(".codex/agents/orchestrator.toml"), Path(".cursor/agents/orchestrator.md")) + tuple(
     Path(folder) / "skills/orchestrate/SKILL.md" for folder in (".claude", ".agents", ".cursor")
 )
@@ -224,14 +226,15 @@ def install(dest: Path, values: dict[str, str], hosts: list[str], force: bool) -
     if current and MARKER in current and not current.startswith(identity):
         raise SystemExit(f"state path belongs to another repository: {state}")
     guide = whole_file(state / "README.md", identity + (TEMPLATES / "state.md").read_text(encoding="utf-8"))
-    ignored = {output.path for output in generated}
+    ignored = {output.path for output in generated} | {WORKTREE_INCLUDE}
     local_excludes = exclude_path(dest)
     previous = TOML_BLOCK.search(read(local_excludes) or "")
     if previous:
         ignored.update(Path(line[1:]) for line in previous.group().splitlines() if line.startswith("/"))
     block = "# agent-setup:start\n" + "".join(f"/{path.as_posix()}\n" for path in sorted(ignored)) + "# agent-setup:end\n"
-    exclusions = Output(local_excludes, lambda text: TOML_BLOCK.sub("", text or "") + ("" if not text or text.endswith("\n") else "\n") + block, lambda _: False)
-    planned = [(dest / output.path, output) for output in [*generated, guide, exclusions]]
+    with_block = lambda text: TOML_BLOCK.sub("", text or "") + ("" if not text or text.endswith("\n") else "\n") + block
+    exclusions, includes = (Output(path, with_block, lambda _: False) for path in (local_excludes, WORKTREE_INCLUDE))
+    planned = [(dest / output.path, output) for output in [*generated, guide, exclusions, includes]]
     blocked = [str(path) for path, output in planned if output.foreign(read(path))]
     if blocked and not force:
         raise SystemExit("not written by agent-setup, rerun with --force to replace: " + ", ".join(blocked))
@@ -251,6 +254,7 @@ def remove(dest: Path) -> None:
         delete_ours(dest / path, dest)
     strip_file(dest / CLAUDE_SETTINGS, without_agent, dest)
     strip_file(dest / CODEX_CONFIG, lambda text: TOML_BLOCK.sub("", text), dest)
+    strip_file(dest / WORKTREE_INCLUDE, lambda text: TOML_BLOCK.sub("", text), dest)
     path = exclude_path(dest)
     strip_file(path, lambda text: TOML_BLOCK.sub("", text), path.parent)
     clear_legacy(dest)

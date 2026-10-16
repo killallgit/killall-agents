@@ -347,24 +347,25 @@
       "expect_changes": {
         "added": [
           ".claude/agents/builder.md",
-          ".claude/agents/reviewer.md",
-          ".claude/agents/hall-monitor.md",
           ".claude/agents/grunt.md",
-          ".claude/agents/planner.md",
+          ".claude/agents/hall-monitor.md",
           ".claude/agents/orchestrator.md",
+          ".claude/agents/planner.md",
+          ".claude/agents/reviewer.md",
           ".claude/settings.json",
           ".codex/agents/builder.toml",
-          ".codex/agents/reviewer.toml",
-          ".codex/agents/hall-monitor.toml",
           ".codex/agents/grunt.toml",
+          ".codex/agents/hall-monitor.toml",
           ".codex/agents/planner.toml",
+          ".codex/agents/reviewer.toml",
           ".codex/config.toml",
           ".cursor/agents/builder.md",
-          ".cursor/agents/reviewer.md",
-          ".cursor/agents/hall-monitor.md",
           ".cursor/agents/grunt.md",
+          ".cursor/agents/hall-monitor.md",
           ".cursor/agents/planner.md",
-          ".cursor/rules/orchestrator.mdc"
+          ".cursor/agents/reviewer.md",
+          ".cursor/rules/orchestrator.mdc",
+          ".worktreeinclude"
         ],
         "modified": [],
         "removed": []
@@ -648,6 +649,44 @@
         ".claude/agents/planner.md",
         ".codex/agents/planner.toml"
       ]
+    },
+    {
+      "id": "worktree-include-keeps-entries",
+      "files": {
+        ".worktreeinclude": "# Local files for new worktrees.\n.env\n"
+      },
+      "args": [
+        "--vars",
+        "{vars}",
+        "--hosts",
+        "claude"
+      ],
+      "expect_startswith": {
+        ".worktreeinclude": "# Local files for new worktrees.\n.env\n# agent-setup:start\n/.claude/agents/builder.md\n"
+      },
+      "expect_endswith": {
+        ".worktreeinclude": "/.worktreeinclude\n# agent-setup:end\n"
+      }
+    },
+    {
+      "id": "remove-worktree-include-entries",
+      "files": {
+        ".worktreeinclude": "# Local files for new worktrees.\n.env\n"
+      },
+      "setup": [
+        [
+          "--vars",
+          "{vars}",
+          "--hosts",
+          "claude"
+        ]
+      ],
+      "args": [
+        "--remove"
+      ],
+      "expect_content": {
+        ".worktreeinclude": "# Local files for new worktrees.\n.env\n"
+      }
     },
     {
       "id": "upgrade-deletes-block-only-files",

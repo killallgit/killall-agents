@@ -43,7 +43,7 @@ Write the values to a JSON file outside the repository, then from this skill's d
 python3 scripts/render_agents.py --dest <git-root> --vars <temp.json> --hosts <hosts>
 ```
 
-Templates hold role instructions, tools, models, and effort; the renderer adapts them to native files and locally excludes generated paths from Git. It creates a shared state README under `~/.config/killall-skills/agents/state/<encoded-main-checkout>/` (honoring `XDG_CONFIG_HOME`). Reruns refresh definitions and the README, preserve lane JSON, and clear legacy output. Update the installed skill first for newer agents. Ask before using `--force` on refused foreign files or settings.
+Templates hold role instructions, tools, models, and effort; the renderer adapts them to native files locally excludes generated paths from Git, and lists them in `.worktreeinclude` so Claude Code copies them into its worktrees. It creates a shared state README under `~/.config/killall-skills/agents/state/<encoded-main-checkout>/` (honoring `XDG_CONFIG_HOME`). Reruns refresh definitions and the README, preserve lane JSON, and clear legacy output. Update the installed skill first for newer agents. Ask before using `--force` on refused foreign files or settings.
 
 Done when the script exits 0.
 
@@ -55,4 +55,4 @@ Done when the script exits 0.
 
 ## 4. Report
 
-Report hosts, models/effort, gate, worktree note, files and state folder, and startup commands. Report unresolved `follow-the-rules`, a missing or unready Pi, tracked generated files (local excludes cannot untrack them), and Codex's isolation limit. `/agent-setup remove` removes definitions and local excludes while preserving lane state.
+Report hosts, models/effort, gate, worktree note, files and state folder, and startup commands. Report unresolved `follow-the-rules`, a missing or unready Pi, tracked generated files (local excludes cannot untrack them), and Codex's isolation limit. `/agent-setup remove` removes definitions, local excludes, and `.worktreeinclude` entries while preserving lane state.
