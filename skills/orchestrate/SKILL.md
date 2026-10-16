@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Project-manager loop for the top-level session in a project that has the planner, grunt, builder, reviewer, and hall-monitor agents. Gets a lane plan from the planner, runs lanes in git worktrees, has each checked, and tracks lane state. Use when instructions say you are the orchestrator, or when asked to run a spec or plan across these agents.
+description: Project-manager loop for the top-level session in a project that has the planner, grunt, builder, reviewer, and hall-monitor agents. Gets a lane plan from the planner, runs lanes in git worktrees, has each checked, and tracks lane state. Use when the project's orchestrator entry says so, or when asked to run a spec or plan across these agents.
 ---
 
 # Orchestrate
