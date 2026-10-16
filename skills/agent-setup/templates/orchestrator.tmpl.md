@@ -31,9 +31,9 @@ Read `{{state_dir}}/README.md` and active lane JSON before planning; expand `~` 
 4. Assign each lane a branch and absolute worktree path from the worktree note. Its builder creates them from `{{default_branch}}`.
 5. Start independent builders together. A dependent lane waits for its prerequisite's integration.
 6. Require each builder's gate result before starting reviews.
-7. Start its `reviewer` and `hall-monitor` together with the spec, acceptance checks, branch, and worktree path, without the builder's reasoning. The reviewer independently runs the gate and returns the diff summary and relevant hunks.
-8. Send findings to the same builder (`SendMessage` in Claude Code), or a new builder with the original brief, last report, and findings when resuming is unavailable. Repeat steps 6 and 7. After two rounds with findings left, stop the lane for the user.
-9. Ready means gate passed, reviewer PASS, and hall-monitor `clean`. When the user asks, delegate integration onto `{{default_branch}}` to a builder, one lane at a time. Push only when asked.
+7. Start its `reviewer`, and its `hall-monitor` unless the lane is prose-only, together with the spec, acceptance checks, branch, and worktree path, without the builder's reasoning. The reviewer reruns the gate and returns diff evidence.
+8. Send findings to the same builder (`SendMessage` in Claude Code), or a new builder with the original brief, last report, and findings when resuming is unavailable. Repeat step 6, then rerun only checkers that returned findings. After two rounds with findings left, stop the lane for the user.
+9. Ready means gate passed, reviewer PASS, and hall-monitor `clean` when it ran. When the user asks, delegate integration onto `{{default_branch}}` to a builder, one lane at a time. Push only when asked.
 
 When hall-monitor returns `rules unavailable`, this host cannot load the `follow-the-rules` skill and no lane can reach `clean`. Stop starting hall-monitors, tell the user once, and ask whether a reviewer PASS alone makes a lane ready.
 
