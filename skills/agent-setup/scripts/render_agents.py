@@ -194,6 +194,14 @@ def clear_legacy(dest: Path) -> None:
         strip_file(dest / name, without_instruction_block, dest)
 
 
+def clear_stale(dest: Path, hosts: list[str], current: set[Path]) -> None:
+    """Our agent files that this version no longer writes, such as a retired role."""
+    for host in hosts:
+        for path in sorted((dest / agent_path(host, ORCHESTRATOR).parent).glob("*")):
+            if path.is_file() and path.relative_to(dest) not in current:
+                delete_ours(path, dest)
+
+
 def project_state(dest: Path) -> tuple[Path, Path]:
     listing = subprocess.check_output(["git", "-C", str(dest), "worktree", "list", "--porcelain", "-z"], text=True)
     root = Path(listing.split("\0", 1)[0].removeprefix("worktree ")).resolve()
@@ -233,6 +241,7 @@ def install(dest: Path, values: dict[str, str], hosts: list[str], force: bool) -
         updated = output.update(current)
         if updated != current:
             write(path, updated)
+    clear_stale(dest, hosts, {output.path for output in generated})
     clear_legacy(dest)
 
 

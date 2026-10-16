@@ -33,6 +33,8 @@ The worktree note, from `AGENTS.md`, `CLAUDE.md`, the git hooks, and `git worktr
 
 Done when every value names something you found, or its stated fallback.
 
+Setup replaces older agents completely. The renderer deletes its own files it no longer writes. List the other files in each host's agent folder, following symlinks; for any that duplicates a role here, such as an older orchestrator or coder agent, ask, then delete the confirmed ones before writing.
+
 ## 2. Write
 
 Write the values to a JSON file outside the repository, then from this skill's directory:
