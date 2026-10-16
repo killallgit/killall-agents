@@ -35,23 +35,23 @@ Dependencies: 2. Likely edits: `.github/workflows/ci.yml`, eval fixtures/tests o
 
 ## Checkpoint: destination ready
 
-- [ ] Destination CI passes and migration evidence is recorded.
-- [ ] Review/land the agents package before removing source copies.
+- [x] Destination CI passes and migration evidence is recorded.
+- [x] Review/land the agents package before removing source copies: killall-agents PR #1.
 
 ## 4. Retire source copies and publish migration
 
-- [ ] Remove only the moved plugin agents, setup package and research after the destination is available.
-- [ ] Update source README, marketplace/plugin metadata and versions; document update/install order, dependency on remaining skills and unchanged state paths.
-- [ ] Verify remaining skill checks, links, source diff and final published package availability; ensure only one maintained copy remains.
+- [x] Remove only the moved plugin agents, setup package and research after the destination is available; source changes are in killall-skills PR #18.
+- [x] Update source README, marketplace/plugin metadata and versions; document update/install order, dependency on remaining skills and unchanged state paths.
+- [x] Source PR #18 merged after checks and its documentation finding were resolved. Both packages are published and only one maintained agent copy remains. Remaining Python/eval metadata, shell syntax, links and native Claude component inventories passed; live agent workflow evals were not run.
 
 Dependencies: 3 and published destination. Paths: moved source paths, README, three plugin manifests and two marketplace manifests. Scope: mechanical removal plus small documentation/metadata edits, committed separately. Verify: remaining documented skill checks, manifest parsing, cross-links and install migration.
 
 ## Checkpoint: extraction complete
 
-- [ ] Existing generated projects refresh/remove without losing state.
-- [ ] Ordinary skills remain usable without the agent plugin; dependent agents resolve skills when both plugins are installed.
-- [ ] New agents and updated skills packages are published in dependency order, with all authorized extraction work included.
-- [ ] Existing roles remain unchanged by extraction; grunt and the setup TUI are v2 tasks 5–6.
+- [x] Existing generated projects refresh/remove without losing state, as covered by the migrated setup/state suites.
+- [x] Both packages load together in native Claude with seven ordinary skills, four agents and the bundled rules/setup skills. The optional investigator uses its qualified namespace with the existing inline fallback. Model-driven skill invocation and live Codex/Cursor installation were not exercised.
+- [x] New agents 1.0.0 and updated skills 4.0.0 are published in dependency order, with all authorized extraction work included.
+- [x] Existing roles remain unchanged by extraction; grunt and the setup TUI are v2 tasks 5–6.
 
 ## V2 / 5. Add grunt with harness discovery
 

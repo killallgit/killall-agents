@@ -1,6 +1,6 @@
 # Plan: extract killall-agents
 
-Scope: [agent-extraction spec](../docs/specs/agent-extraction.md). Tasks and checkpoints are tracked in [todo.md](todo.md). V1 extraction is implemented on the migration branch; publication and source retirement are pending. V2 remains planned.
+Scope: [agent-extraction spec](../docs/specs/agent-extraction.md). Tasks and checkpoints are tracked in [todo.md](todo.md). V1 is complete: [killall-agents PR #1](https://github.com/killallgit/killall-agents/pull/1) published the destination first, then [killall-skills PR #18](https://github.com/killallgit/killall-skills/pull/18) retired the source copies. Native Claude loading and all 55 setup checks pass; live Codex/Cursor installation and model-driven workflow evals were not run. V2 remains planned.
 
 ## Decisions
 
