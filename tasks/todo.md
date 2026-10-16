@@ -35,14 +35,14 @@ Dependencies: 2. Likely edits: `.github/workflows/ci.yml`, eval fixtures/tests o
 
 ## Checkpoint: destination ready
 
-- [ ] Destination CI passes and migration evidence is recorded.
-- [ ] Review/land the agents package before removing source copies.
+- [x] Destination CI passes and migration evidence is recorded.
+- [x] Review/land the agents package before removing source copies: killall-agents PR #1.
 
 ## 4. Retire source copies and publish migration
 
-- [ ] Remove only the moved plugin agents, setup package and research after the destination is available.
-- [ ] Update source README, marketplace/plugin metadata and versions; document update/install order, dependency on remaining skills and unchanged state paths.
-- [ ] Verify remaining skill checks, links, source diff and final published package availability; ensure only one maintained copy remains.
+- [x] Remove only the moved plugin agents, setup package and research after the destination is available; source changes are in killall-skills PR #18.
+- [x] Update source README, marketplace/plugin metadata and versions; document update/install order, dependency on remaining skills and unchanged state paths.
+- [ ] Land source PR #18 after its checks clear; confirm final published package availability and that only one maintained agent copy remains. Remaining Python/eval metadata, shell syntax, links and native Claude component inventories passed; live agent workflow evals were not run.
 
 Dependencies: 3 and published destination. Paths: moved source paths, README, three plugin manifests and two marketplace manifests. Scope: mechanical removal plus small documentation/metadata edits, committed separately. Verify: remaining documented skill checks, manifest parsing, cross-links and install migration.
 

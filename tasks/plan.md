@@ -1,6 +1,6 @@
 # Plan: extract killall-agents
 
-Scope: [agent-extraction spec](../docs/specs/agent-extraction.md). Tasks and checkpoints are tracked in [todo.md](todo.md). V1 extraction is implemented on the migration branch; publication and source retirement are pending. V2 remains planned.
+Scope: [agent-extraction spec](../docs/specs/agent-extraction.md). Tasks and checkpoints are tracked in [todo.md](todo.md). The destination catalog is published through [killall-agents PR #1](https://github.com/killallgit/killall-agents/pull/1); source retirement is in [killall-skills PR #18](https://github.com/killallgit/killall-skills/pull/18). V2 remains planned.
 
 ## Decisions
 
