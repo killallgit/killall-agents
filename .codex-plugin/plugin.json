@@ -1,0 +1,18 @@
+{
+  "name": "killall-agents",
+  "version": "1.0.0",
+  "description": "Killallgit agent catalog and project setup",
+  "author": {
+    "name": "archae0pteryx",
+    "url": "https://github.com/killallgit"
+  },
+  "homepage": "https://github.com/killallgit/killall-agents",
+  "repository": "https://github.com/killallgit/killall-agents",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Killall Agents",
+    "shortDescription": "Agent catalog, project setup, and bundled programming rules.",
+    "developerName": "archae0pteryx",
+    "category": "Productivity"
+  }
+}

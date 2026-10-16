@@ -1,1 +1,21 @@
-/bin/
+# Local secrets — never commit. Use .env.example as the template.
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+
+# Test / OS noise
+.pytest_cache/
+.DS_Store
+_old
+# Serena is not used in this repository
+.serena/
+
+# Claude Code per-checkout state
+.claude/worktrees/
+.claude/settings.local.json
+
+# Experiment scratch output
+tmp/
