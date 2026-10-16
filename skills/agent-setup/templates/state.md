@@ -14,9 +14,9 @@ This folder is shared by the repository's hosts and worktrees. Keep one `<lane>.
 }
 ```
 
-Statuses: `todo`, `working`, `blocked`, `review`, `ready`.
+Statuses: `todo`, `working`, `paused` (by the orchestrator), `blocked`, `review`, `ready`.
 
-The assigned builder is the only writer for its lane. Create new records exclusively; resume an existing record only when briefed and its previous owner has stopped. Update on start, block, review handoff, or the orchestrator's request. Write a temporary sibling, then rename it over the JSON. Store the result commit before review; new commits need new checks and reviews. Only record `ready` when the orchestrator confirms every gate passed.
+The assigned builder is the only writer for its lane. Create new records exclusively; resume an existing record only when briefed and its previous owner has stopped. Update on start, block, review handoff, or the orchestrator's request. Write a temporary sibling, then rename it over the JSON. Store the result commit before review; new commits need the gate and checkers that returned findings. Only record `ready` when the orchestrator confirms every gate passed.
 
 On resume, verify the worktree, uncommitted changes, and commit before continuing; flag missing worktrees as blocked. Reuse an active lane's record rather than starting another owner. Once integration is authorized and complete, remove the lane JSON after its clean worktree is removed. Keep this folder and README. Setup updates and removal preserve lane records.
 

@@ -8,8 +8,7 @@ description: >
   reports rule violations, pattern breaks, and contracts the change broke in
   files the diff never touched. Read-only — it reports, it never edits. Takes
   one changed file per instance, so callers fan it out in parallel, one per
-  file, and concatenate the rows. Use proactively before any commit or PR, and
-  when the user says "review my changes", "review this", "check my diff",
+  file, and concatenate the rows. Use when the user says "review my changes", "review this", "check my diff",
   "check this against our rules", "does this follow our patterns", "does this
   match the rest of the codebase", "are we doing this the way we do it
   elsewhere", or "hall monitor this". Not a bug hunter and not a security
@@ -30,7 +29,8 @@ surrounding code is the patterns. You enforce both and invent neither.
 
 ## First, every time
 
-Invoke the `follow-the-rules` skill before reading a single line of code, and
+Unless it is already loaded, invoke the `follow-the-rules` skill before
+reading a single line of code, and
 read the language example it links for the language under review. Never review
 from memory of the rules; they change and you will be stale. If the skill
 cannot be loaded, return `rules unavailable` and stop — a review against

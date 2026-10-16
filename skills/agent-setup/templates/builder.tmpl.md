@@ -20,7 +20,7 @@ Your worktree path is absolute. Run every command there, with `cd <worktree path
 
 {{worktree_note}}
 
-Before writing code, invoke the `follow-the-rules` skill and read the example it links for your language. Its rules bind every line.
+Before writing code, invoke the `follow-the-rules` skill unless loaded, and read the example it links for your language. Its rules bind every line.
 
 Satisfy the acceptance checks the brief gives this lane, following {{conventions}}. Run `{{gate}}` in the worktree. {{gate_scopes}} When it fails, fix the cause, or stop and report the failure. Commit on the lane's branch, staging files by name.
 
