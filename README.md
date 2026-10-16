@@ -40,7 +40,7 @@ Claude Code loads these from the plugin. Mention `@agent-killall-agents:git-jani
 
 ## Project agents
 
-Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex, inside a project. It copies these agents from [`factory/`](factory/) into the project's `.claude/agents/`, `.codex/agents/` and `.cursor/agents/`, keeps the copies out of Git through `.git/info/exclude`, and lists them in `.worktreeinclude` so Claude Code worktrees get them too. `remove` takes them out again.
+Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex, inside a project. It copies these agents from [`factory/`](factory/) into the project's `.claude/agents/`, `.codex/agents/` and `.cursor/agents/`, adds the orchestrator entry to the project's `CLAUDE.local.md`, `.codex/config.toml` and `.cursor/rules/killall-orchestrator.mdc`, keeps all of it out of Git through `.git/info/exclude`, and lists it in `.worktreeinclude` so Claude Code worktrees get it too. Nothing is installed globally. `remove` takes it all out again.
 
 | Agent | Job | Claude model / effort | Codex model / effort |
 | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex, in
 | `reviewer` | Checks a lane's behavior and runs the gate independently | Sonnet / high | `gpt-6.1-sol` / high |
 | `hall-monitor` | Checks a lane against `follow-the-rules` and the codebase's patterns; read-only | Haiku / medium | `gpt-6-luna` / medium |
 
-Cursor agents inherit the session model. The top-level session is the orchestrator: one line in the user's Claude Code and Codex instructions, or Cursor's user rules, tells it to load the [`orchestrate`](skills/orchestrate/SKILL.md) skill when the project has these agents. The skill is the project-manager loop: plan with the planner, run lanes with grunt and builders, check with reviewer and hall-monitor. Agents read the gate, branch and worktree rules from the project's own `AGENTS.md`.
+Cursor agents inherit the session model. The orchestrator entry tells the project's top-level session to load the [`orchestrate`](skills/orchestrate/SKILL.md) skill. The skill is the project-manager loop: plan with the planner, run lanes with grunt and builders, check with reviewer and hall-monitor. Agents read the gate, branch and worktree rules from the project's own `AGENTS.md`.
 
 Grunt needs `pi` on `PATH` with a ready provider. Builders and hall-monitor need the included `follow-the-rules` skill. Lane records live at `${XDG_CONFIG_HOME:-~/.config}/killall-skills/agents/state/<encoded-main-checkout>/`, shared by a checkout's worktrees and hosts.
 
