@@ -1,0 +1,21 @@
+{
+  "name": "killall-agents",
+  "interface": {
+    "displayName": "Killall Agents"
+  },
+  "plugins": [
+    {
+      "name": "killall-agents",
+      "description": "Agent catalog, agent-setup, and follow-the-rules.",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
