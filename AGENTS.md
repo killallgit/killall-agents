@@ -9,9 +9,12 @@ Run from the repository root:
 ```sh
 python3 scripts/build_agents.py --check
 python3 skills/agent-setup/scripts/test_install.py
+python3 scripts/test_agent_report.py
 git diff --check
 ```
 
 `skills/follow-the-rules/` is an independent copy from [killall-skills](https://github.com/killallgit/killall-skills/tree/a016d77ff5f86821f0292a5a00dbf4600b0d8a15/skills/follow-the-rules); preserve its relative reference links. The git-janitor agent still requires the separately installed `killall-skills:git-janitor` skill.
+
+`scripts/agent_report.py` summarizes how the agents ran: tokens, peak context, time and tool errors from Claude and Codex transcripts, and lane outcomes from the orchestrator's `runs.jsonl`.
 
 Pending grunt and setup TUI work is tracked in `tasks/todo.md`.
