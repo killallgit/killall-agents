@@ -10,9 +10,9 @@ Grunt is a thin host agent (Claude Haiku, Codex `gpt-6-luna`) that relays one ta
 
 ## Setup TUI
 
-- [ ] Add a terminal picker for host and agents, show required dependencies, and confirm the selection before applying. Preserve the noninteractive renderer.
-- [ ] Configure grunt from discovered local harness/provider profiles, preselecting existing defaults. Persist harness/model/effort/context settings locally without putting credentials or endpoints in shared templates.
+- [ ] Add a terminal picker for host and agents, show required dependencies, and confirm the selection before applying. Keep `install.py` usable without the picker.
+- [ ] Configure grunt from discovered local harness/provider profiles, preselecting existing defaults. Persist harness/model/effort/context settings locally without putting credentials or endpoints in the packaged agents.
 - [ ] Install selected agents and accepted dependencies only. Refresh owned definitions on rerun; preserve unrelated files, unselected existing agents and lane state. Cancellation before apply writes nothing.
 - [ ] Test selection, dependencies, cancellation, reruns, unavailable harnesses and saved grunt settings driving a real job.
 
-Keep the existing 49 renderer cases and 6 state checks passing throughout.
+Keep `scripts/build_agents.py --check` and `test_install.py` passing throughout.

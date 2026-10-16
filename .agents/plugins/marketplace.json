@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "killall-agents",
-      "description": "Agent catalog, agent-setup, and follow-the-rules.",
+      "description": "Agent catalog, per-project agents, and follow-the-rules.",
       "source": {
         "source": "local",
         "path": "./"

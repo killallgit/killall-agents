@@ -1,5 +1,5 @@
 interface:
   display_name: "Agent setup"
-  short_description: "Set up or remove the orchestrator session role and lane agents for parallel worktree work."
+  short_description: "Install or remove the packaged planner, grunt, builder, reviewer and hall-monitor agents in one project."
 policy:
   allow_implicit_invocation: false
