@@ -6,7 +6,7 @@ claude_skills: follow-the-rules
 claude_model: haiku
 claude_effort: medium
 codex_model: gpt-6-luna
-codex_effort: high
+codex_effort: medium
 cursor_readonly: true
 ---
 

@@ -47,9 +47,9 @@ Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex. Se
 | --- | --- | --- |
 | Orchestrator | Opus / high | `gpt-6-astra` / high |
 | Grunt (relays to Pi) | Haiku / low | `gpt-6-luna` / low |
-| Builder | Sonnet / high | `gpt-6.1-sol` / high |
+| Builder | Sonnet / medium | `gpt-6.1-sol` / medium |
 | Reviewer | Sonnet / high | `gpt-6.1-sol` / high |
-| Lane hall-monitor | Haiku / medium | `gpt-6-luna` / high |
+| Lane hall-monitor | Haiku / medium | `gpt-6-luna` / medium |
 
 One [template per role](skills/agent-setup/templates/) holds host settings; the [renderer](skills/agent-setup/scripts/render_agents.py) writes Claude Markdown, Codex TOML and Cursor Markdown/rules. Claude starts via the `agent` setting in `.claude/settings.json`, Codex via the managed block in `.codex/config.toml` for a trusted project, and Cursor via an always-applied rule. Cursor inherits its session model.
 
