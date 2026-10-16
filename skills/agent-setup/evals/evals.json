@@ -118,7 +118,7 @@
           "tools": "Read, Grep, Glob, Bash, Edit, Write, Skill",
           "skills": "follow-the-rules",
           "model": "sonnet",
-          "effort": "high"
+          "effort": "medium"
         },
         ".claude/agents/reviewer.md": {
           "name": "reviewer",
@@ -164,7 +164,7 @@
           "name": "builder",
           "sandbox_mode": null,
           "model": "gpt-6.1-sol",
-          "model_reasoning_effort": "high"
+          "model_reasoning_effort": "medium"
         },
         ".codex/agents/reviewer.toml": {
           "name": "reviewer",
@@ -176,7 +176,7 @@
           "name": "hall-monitor",
           "sandbox_mode": null,
           "model": "gpt-6-luna",
-          "model_reasoning_effort": "high"
+          "model_reasoning_effort": "medium"
         },
         ".claude/agents/orchestrator.md": {
           "model": "opus",
@@ -905,7 +905,7 @@
         },
         ".claude/agents/builder.md": {
           "model": "sonnet",
-          "effort": "high"
+          "effort": "medium"
         },
         ".codex/agents/grunt.toml": {
           "name": "grunt",
@@ -915,7 +915,7 @@
         },
         ".codex/agents/builder.toml": {
           "model": "gpt-6.1-sol",
-          "model_reasoning_effort": "high",
+          "model_reasoning_effort": "medium",
           "sandbox_mode": null
         },
         ".claude/agents/reviewer.md": {
@@ -933,7 +933,7 @@
         },
         ".codex/agents/hall-monitor.toml": {
           "model": "gpt-6-luna",
-          "model_reasoning_effort": "high",
+          "model_reasoning_effort": "medium",
           "sandbox_mode": null
         }
       },

@@ -4,9 +4,9 @@ description: Lane agent started only by the orchestrator. Implements one lane of
 claude_tools: Read, Grep, Glob, Bash, Edit, Write, Skill
 claude_skills: follow-the-rules
 claude_model: sonnet
-claude_effort: high
+claude_effort: medium
 codex_model: gpt-6.1-sol
-codex_effort: high
+codex_effort: medium
 cursor_readonly: false
 ---
 
