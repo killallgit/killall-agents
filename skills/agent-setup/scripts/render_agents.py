@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import NamedTuple
 
 TEMPLATES = Path(__file__).resolve().parent.parent / "templates"
-AGENT_TEMPLATES = ("builder", "reviewer", "hall-monitor")
+AGENT_TEMPLATES = ("grunt", "builder", "reviewer", "hall-monitor")
 ORCHESTRATOR = "orchestrator"
 HOSTS = {"claude": ".claude/agents/{}.md", "cursor": ".cursor/agents/{}.md", "codex": ".codex/agents/{}.toml"}
 CLAUDE_SETTINGS = Path(".claude/settings.json")
