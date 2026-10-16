@@ -1,71 +1,24 @@
-# Extraction tasks
+# V2: grunt and setup TUI
 
-Spec: [agent-extraction](../docs/specs/agent-extraction.md). Approach: [plan](plan.md).
+## Grunt
 
-## 1. Portable legacy-upgrade fixtures
+- [ ] Discover installed harnesses and reuse the selected harness's provider and credential configuration. Keep machine settings local. The initial target is local Pi calling a remote Strata model; Git, files and tests remain local to Pi.
+- [ ] Add a small-context grunt role for Git updates, exact test execution and concise failure reports. Keep implementation and diagnosis with builders/reviewers; the orchestrator only dispatches work.
+- [ ] Pass a bounded brief: job ID, execution target, absolute checkout, expected branch/commit, allowed Git update, test commands, timeout and log destination. Read repository instructions, status and relevant output rather than broad repository context.
+- [ ] Verify checkout identity and cleanliness before updating. Fetch only the named remote and fast-forward only the named branch. Stop on dirty files, divergence, conflicts or unexpected identity; preserve all existing work. Exclude stash, reset, rebase, cleanup, commit, push and unrelated branch merges.
+- [ ] Run supplied commands once with timeouts. Stream full logs to artifacts and return a bounded excerpt, exit codes, available test counts, before/after commit and log reference. Distinguish pass, fail, blocked, cancelled and not run. A failed prerequisite blocks dependent tests.
+- [ ] Route results through the existing lane-state writer and failures to the responsible builder/reviewer. Keep independent reviewer checks. Grunt cannot edit source/tests, adjust expectations or delegate; verify the selected harness can enforce those limits.
+- [ ] Test clean updates, dirty/diverged/wrong checkouts, failing tests, timeouts and provider failures. Confirm bounded reports, retrievable logs and no source/test edits; verify one real job through the selected harness.
 
-- [x] Export minimal snapshots for `d92095b` and `1fe222f4a6f3f3a9ddbcb52c188bbc8c6700747a`, recording provenance.
-- [x] Update the fixture loader to use snapshots for those versions; retain meaningful upgrade/removal assertions and document comparison-ref semantics.
-- [x] Verify all 49 renderer cases and 6 state tests pass; verify old upgrade cases in a checkout without source-history objects.
+Pi provides a [JSONL RPC interface](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/rpc.md). Discover harness command, provider/model, effort, context capacity and execution controls before enabling grunt; report unsupported configurations instead of silently substituting them. The configured remote model is `qwen3.8-flash-next-q2_0`, medium effort, with a user-supplied 65,536-token context and 8,192-token output limit. A tool-free request passed; the server does not advertise context capacity. Full grunt execution remains to be verified.
 
-Dependencies: none. Likely edits: `evals/fixtures/make_repo.py`, two snapshot fixture files, `evals/README.md`, and `evals/compare_previous.py` only if needed. Scope: medium.
+## Setup TUI
 
-## 2. Working destination package
+Depends on a working grunt adapter.
 
-- [x] Connect the empty local destination to the real remote main, inspect existing work, and create a migration branch preserving published history.
-- [x] Replace tracked Go prototype content with the inventoried agent catalog, complete setup package, research, native manifests and concise instructions/install docs. Include a copy of the full five-file `follow-the-rules` skill, retaining the original in the skills repo.
-- [x] Verify imported definitions and generated output retain existing behavior and paths; parse host manifests and check their targets.
+- [ ] Add a terminal picker for host and agents, show required dependencies, and confirm the selection before applying. Preserve the noninteractive renderer.
+- [ ] Configure grunt from discovered local harness/provider profiles, preselecting existing defaults. Persist harness/model/effort/context settings locally without putting credentials or endpoints in shared templates.
+- [ ] Install selected agents and accepted dependencies only. Refresh owned definitions on rerun; preserve unrelated files, unselected existing agents and lane state. Cancellation before apply writes nothing.
+- [ ] Test selection, dependencies, cancellation, reruns, unavailable harnesses and saved grunt settings driving a real job.
 
-Dependencies: 1. Paths: destination prototype files, `agents/`, `skills/agent-setup/`, research, host manifests, README and AGENTS.md. Scope: mechanical replacement plus small packaging edits; commit those concerns separately.
-
-## Checkpoint: destination exists independently
-
-- [x] Source plugin still works unchanged.
-- [x] Destination retains the old repository's history and contains no Go prototype runtime/configuration.
-- [x] All 55 baseline checks pass in the destination; no copied credentials or machine-specific settings.
-- [x] Review extraction and packaging before publishing.
-
-## 3. Destination verification and CI
-
-- [x] Replace the prototype workflow with the two Python checks; preserve the existing test count and assertions.
-- [x] Verify legacy upgrade, rerun and removal preserve lane JSON in isolated existing-project fixtures, without source Git history or network access.
-- [x] Native Claude validation and component discovery passed: two skills and four agents. Bundled rules and all relative links are present. Codex/Cursor manifests parse and skill paths resolve; their live installation and model-driven skill invocation were not run.
-
-Dependencies: 2. Likely edits: `.github/workflows/ci.yml`, eval fixtures/tests only for migration gaps, README for observed install details. Scope: small/medium. Verify: both Python commands in the plan, manifest validation, installation smoke.
-
-## Checkpoint: destination ready
-
-- [x] Destination CI passes and migration evidence is recorded.
-- [x] Review/land the agents package before removing source copies: killall-agents PR #1.
-
-## 4. Retire source copies and publish migration
-
-- [x] Remove only the moved plugin agents, setup package and research after the destination is available; source changes are in killall-skills PR #18.
-- [x] Update source README, marketplace/plugin metadata and versions; document update/install order, dependency on remaining skills and unchanged state paths.
-- [x] Source PR #18 merged after checks and its documentation finding were resolved. Both packages are published and only one maintained agent copy remains. Remaining Python/eval metadata, shell syntax, links and native Claude component inventories passed; live agent workflow evals were not run.
-
-Dependencies: 3 and published destination. Paths: moved source paths, README, three plugin manifests and two marketplace manifests. Scope: mechanical removal plus small documentation/metadata edits, committed separately. Verify: remaining documented skill checks, manifest parsing, cross-links and install migration.
-
-## Checkpoint: extraction complete
-
-- [x] Existing generated projects refresh/remove without losing state, as covered by the migrated setup/state suites.
-- [x] Both packages load together in native Claude with seven ordinary skills, four agents and the bundled rules/setup skills. The optional investigator uses its qualified namespace with the existing inline fallback. Model-driven skill invocation and live Codex/Cursor installation were not exercised.
-- [x] New agents 1.0.0 and updated skills 4.0.0 are published in dependency order, with all authorized extraction work included.
-- [x] Existing roles remain unchanged by extraction; grunt and the setup TUI are v2 tasks 5–6.
-
-## V2 / 5. Add grunt with harness discovery
-
-- [x] Discover and configure this installation's Pi defaults: Strata provider, `qwen3.8-flash-next-q2_0`, medium effort, 65,536 context metadata and the existing 8,192 output limit. Verify the remote model is advertised and a tool-free default-provider request returns `OK`. Server capacity is not independently reported.
-- [ ] Define grunt and discover/select the harness per installation; use the bounded brief in the spec. Reuse the selected harness's existing provider/credential configuration and wire orchestrator dispatch without giving it implementation tools.
-- [ ] Support checkout/status verification, safe fetch/fast-forward, exact test commands with timeouts, retrievable full logs and short structured pass/fail/blocked/cancelled/not-run reports. Route results to the existing lane-state writer and failures to the responsible builder/reviewer.
-- [ ] Verify happy-path Git update/tests plus dirty/diverged/wrong checkout, failing tests, timeout and provider failure. Confirm no source/test edits or destructive Git actions, bounded returned output, and one real grunt job through the selected harness/model.
-
-Dependencies: 4 for implementation; local harness preflight is complete independently. Likely edits in `killall-agents`: grunt definition, existing orchestration instructions, minimal dispatch adapter, focused adapter tests and README. Scope: medium; reuse the selected harness rather than adding a remote service. Verify: focused fixture-based checks, the unchanged 55 setup checks and a live grunt execution smoke. Credentials/endpoints remain local.
-
-## V2 / 6. Basic setup TUI
-
-- [ ] Add a small terminal picker for target host and selected agents, showing required dependencies and confirming the selection before apply. Preserve the noninteractive renderer for automation.
-- [ ] Let users define custom grunt harness/model/effort/context settings using discovered local profiles, preselecting this machine's Pi/Strata defaults when available. Persist execution settings locally without copying credentials into templates.
-- [ ] Test selected-only installation, dependency handling, cancellation without writes, rerun/state preservation, unavailable harnesses and saved grunt settings driving a verified job.
-
-Dependencies: 5. Likely edits: setup entrypoint/renderer, setup instructions, focused selection/config tests and README. Scope: medium. Verify: interactive smoke plus focused fixture tests and all baseline setup checks. No TUI work in v1.
+Keep the existing 49 renderer cases and 6 state checks passing throughout.
