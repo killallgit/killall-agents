@@ -45,10 +45,13 @@ def context(usage: dict) -> int:
     return usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0) + usage.get("cache_read_input_tokens", 0)
 
 
-def claude_runs(root: Path, since: float):
+def claude_runs(root: Path, since: float, agents: tuple[str, ...] | None = None):
     for meta in root.glob("*/*/subagents/*.meta.json"):
         transcript = meta.with_name(meta.name.removesuffix(".meta.json") + ".jsonl")
         if not transcript.is_file() or transcript.stat().st_mtime < since:
+            continue
+        agent = json.loads(meta.read_text(encoding="utf-8")).get("agentType", "?").rsplit(":", 1)[-1]
+        if agents and agent not in agents:
             continue
         usage, models, stamps, tools, errors = {}, Counter(), [], 0, []
         for entry in entries(transcript.open(encoding="utf-8")):
@@ -65,7 +68,7 @@ def claude_runs(root: Path, since: float):
             errors += [first_line(part.get("content")) for part in content if part.get("type") == "tool_result" and part.get("is_error")]
         yield {
             "host": "claude",
-            "agent": json.loads(meta.read_text(encoding="utf-8")).get("agentType", "?").rsplit(":", 1)[-1],
+            "agent": agent,
             "project": meta.parents[2].name,
             "tokens_in": sum(context(u) for u in usage.values()),
             "peak": max(map(context, usage.values()), default=0),
@@ -177,13 +180,14 @@ def main() -> None:
     home = Path.home()
     codex = Path(os.environ.get("CODEX_HOME", home / ".codex")) / "sessions"
     state = Path(os.environ.get("XDG_CONFIG_HOME", home / ".config")) / "killall-skills/agents/state"
-    runs = [*claude_runs(home / ".claude/projects", since), *codex_runs(codex, since)]
+    agents = None if args.all else AGENTS
+    runs = [*claude_runs(home / ".claude/projects", since, agents), *codex_runs(codex, since)]
     rows = list(outcomes(state, since))
     if args.project:
         runs = [run for run in runs if key(args.project) in run["project"]]
         rows = [row for row in rows if key(args.project) in row["project"]]
-    if not args.all:
-        runs = [run for run in runs if run["agent"] in AGENTS]
+    if agents:
+        runs = [run for run in runs if run["agent"] in agents]
     print(report(runs, rows))
 
 

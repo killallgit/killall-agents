@@ -25,7 +25,7 @@ Quote them into every brief. Ask when the gate is unclear. Without repository ru
 
 The state folder is `${XDG_CONFIG_HOME:-~/.config}/killall-skills/agents/state/<key>/`, where `<key>` is the main checkout's absolute path, the first line of `git worktree list --porcelain`, with every character that is not a letter or digit replaced by `-`. Read its lane JSON before planning. Give each builder the folder and a unique `<lane>.json`; the builder is that record's only writer.
 
-Each time an agent returns, append one line to `runs.jsonl` in the same folder; you are its only writer. `scripts/agent_report.py` in killall-agents reads it.
+Each time an agent returns, append one line to `runs.jsonl` in the same folder; you are its only writer.
 
 ```json
 {"time": "2026-10-16T21:17:58Z", "lane": "auth", "agent": "reviewer", "round": 1, "result": "CHANGES"}

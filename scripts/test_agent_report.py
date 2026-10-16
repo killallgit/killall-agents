@@ -34,6 +34,7 @@ def main() -> None:
         [claude] = claude_runs(root / "claude", 0)
         assert (claude["agent"], claude["tokens_in"], claude["peak"], claude["tokens_out"], claude["tools"]) == ("builder", 100, 100, 5, 1), claude
         assert claude["minutes"] == 3 and claude["errors"] == ["Exit code 1: boom"], claude
+        assert list(claude_runs(root / "claude", 0, ("reviewer",))) == [], "builder not skipped"
 
         meta = {"payload": {"thread_source": "subagent", "agent_role": "grunt", "cwd": "/repo", "subagent_history_start_ordinal": 2}}
         lines(
