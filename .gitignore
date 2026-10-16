@@ -1,4 +1,4 @@
-# Local secrets — never commit. Use .env.example as the template.
+# Local secrets
 .env
 .env.local
 
@@ -10,7 +10,6 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 _old
-# Serena is not used in this repository
 .serena/
 
 # Claude Code per-checkout state
