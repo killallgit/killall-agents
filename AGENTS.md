@@ -1,18 +1,16 @@
 # killall-agents
 
-Public agent catalog and project setup for Claude Code, Codex, and Cursor (beta). Keep credentials, machine-specific settings and runtime state out of this repository.
+Public agent catalog and per-project agents for Claude Code, Codex, and Cursor. Keep credentials, machine-specific settings and runtime state out of this repository.
 
-Role templates and host settings live in `skills/agent-setup/templates/`; `scripts/render_agents.py` in that skill adapts them to host files. Preserve existing generated paths, ownership markers, foreign-setting checks and the shared state location when changing setup.
+The project agents' source is `factory/claude/`; `scripts/build_agents.py` writes the Codex and Cursor copies beside it, and the per-host Codex models live in that script. `skills/agent-setup/scripts/install.py` copies `factory/` into one project. The orchestrator is the `orchestrate` skill, not an agent. Keep the lane state location and the `<!-- killall-agents -->` / `# killall-agents` ownership markers stable.
 
 Run from the repository root:
 
 ```sh
-python3 skills/agent-setup/evals/run.py
-python3 skills/agent-setup/evals/state.py
+python3 scripts/build_agents.py --check
+python3 skills/agent-setup/scripts/test_install.py
 git diff --check
 ```
-
-Upgrade fixtures include historical renderer/template snapshots so tests work in shallow checkouts without source-repository history or network access.
 
 `skills/follow-the-rules/` is an independent copy from [killall-skills](https://github.com/killallgit/killall-skills/tree/a016d77ff5f86821f0292a5a00dbf4600b0d8a15/skills/follow-the-rules); preserve its relative reference links. The git-janitor agent still requires the separately installed `killall-skills:git-janitor` skill.
 

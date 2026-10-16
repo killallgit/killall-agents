@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Renderer evaluations
-        run: python3 skills/agent-setup/evals/run.py
-      - name: Shared state and exclusions
-        run: python3 skills/agent-setup/evals/state.py
+      - name: Codex and Cursor copies are current
+        run: python3 scripts/build_agents.py --check
+      - name: Project install
+        run: python3 skills/agent-setup/scripts/test_install.py

@@ -10,7 +10,7 @@
     {
       "name": "killall-agents",
       "source": "./",
-      "description": "Agent catalog, agent-setup, and follow-the-rules.",
+      "description": "Agent catalog, per-project agents, and follow-the-rules.",
       "category": "workflow",
       "homepage": "https://github.com/killallgit/killall-agents"
     }
