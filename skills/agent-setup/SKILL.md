@@ -1,13 +1,13 @@
 ---
 name: agent-setup
-description: Set up, or remove, an orchestrator session role plus builder, reviewer, and hall-monitor agents in a repository for Claude Code, Codex, and Cursor.
+description: Set up, or remove, an orchestrator session role plus planner, grunt, builder, reviewer, and hall-monitor agents in a repository for Claude Code, Codex, and Cursor.
 disable-model-invocation: true
 argument-hint: "[remove] [path]"
 ---
 
 # Agent setup
 
-Give a repository an orchestrator every session starts as, and its three lane agents, rendered from `templates/` with this repository's values.
+Give a repository an orchestrator every session starts as, a planner, its three lane agents, and grunt, rendered from `templates/` with this repository's values.
 
 When the first argument is `remove`, run `python3 scripts/render_agents.py --dest <git-root> --remove` from this skill's directory and report what it removed.
 
@@ -48,8 +48,9 @@ Done when the script exits 0.
 ## 3. Check
 
 - `follow-the-rules`, which builder and hall-monitor load, resolves on each host: under `.claude/skills/`, `.agents/skills/`, or `.cursor/skills/` in the repository or `~`, or from an enabled plugin.
+- Grunt runs `pi` from `PATH` with Pi's default provider and model: `pi auth check --provider <defaultProvider> --json` reports `ready`.
 - Codex needs a trusted project and write access to worktrees and the printed state folder (`codex --add-dir <state-folder>`). Subagents inherit session permissions. Its orchestrator delegates by instruction; Claude's tool allowlist excludes shell and edit tools.
 
 ## 4. Report
 
-Report hosts, models/effort, gate, worktree note, files and state folder, and startup commands. Report unresolved `follow-the-rules`, tracked generated files (local excludes cannot untrack them), and Codex's isolation limit. `/agent-setup remove` removes definitions and local excludes while preserving lane state.
+Report hosts, models/effort, gate, worktree note, files and state folder, and startup commands. Report unresolved `follow-the-rules`, a missing or unready Pi, tracked generated files (local excludes cannot untrack them), and Codex's isolation limit. `/agent-setup remove` removes definitions and local excludes while preserving lane state.

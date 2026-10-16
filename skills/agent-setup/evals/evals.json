@@ -15,12 +15,18 @@
         ".claude/agents/builder.md",
         ".claude/agents/reviewer.md",
         ".claude/agents/hall-monitor.md",
+        ".claude/agents/grunt.md",
+        ".claude/agents/planner.md",
         ".codex/agents/builder.toml",
         ".codex/agents/reviewer.toml",
         ".codex/agents/hall-monitor.toml",
+        ".codex/agents/grunt.toml",
+        ".codex/agents/planner.toml",
         ".cursor/agents/builder.md",
         ".cursor/agents/reviewer.md",
-        ".cursor/agents/hall-monitor.md"
+        ".cursor/agents/hall-monitor.md",
+        ".cursor/agents/grunt.md",
+        ".cursor/agents/planner.md"
       ],
       "expect_absent": [
         ".claude/skills/orchestrate/SKILL.md",
@@ -39,15 +45,21 @@
       "expect_files": [
         ".claude/agents/builder.md",
         ".claude/agents/reviewer.md",
-        ".claude/agents/hall-monitor.md"
+        ".claude/agents/hall-monitor.md",
+        ".claude/agents/grunt.md",
+        ".claude/agents/planner.md"
       ],
       "expect_absent": [
         ".codex/agents/builder.toml",
         ".codex/agents/reviewer.toml",
         ".codex/agents/hall-monitor.toml",
+        ".codex/agents/grunt.toml",
+        ".codex/agents/planner.toml",
         ".cursor/agents/builder.md",
         ".cursor/agents/reviewer.md",
         ".cursor/agents/hall-monitor.md",
+        ".cursor/agents/grunt.md",
+        ".cursor/agents/planner.md",
         ".codex/config.toml",
         ".cursor/rules/orchestrator.mdc"
       ]
@@ -64,14 +76,20 @@
         ".codex/agents/builder.toml",
         ".codex/agents/reviewer.toml",
         ".codex/agents/hall-monitor.toml",
+        ".codex/agents/grunt.toml",
+        ".codex/agents/planner.toml",
         ".cursor/agents/builder.md",
         ".cursor/agents/reviewer.md",
-        ".cursor/agents/hall-monitor.md"
+        ".cursor/agents/hall-monitor.md",
+        ".cursor/agents/grunt.md",
+        ".cursor/agents/planner.md"
       ],
       "expect_absent": [
         ".claude/agents/builder.md",
         ".claude/agents/reviewer.md",
         ".claude/agents/hall-monitor.md",
+        ".claude/agents/grunt.md",
+        ".claude/agents/planner.md",
         ".claude/settings.json"
       ]
     },
@@ -97,26 +115,50 @@
         "{vars}"
       ],
       "expect_metadata": {
+        ".claude/agents/planner.md": {
+          "name": "planner",
+          "tools": "Read, Grep, Glob",
+          "skills": null,
+          "model": "opus",
+          "effort": "high"
+        },
+        ".claude/agents/grunt.md": {
+          "name": "grunt",
+          "tools": "Bash",
+          "skills": null,
+          "model": "haiku",
+          "effort": "low"
+        },
         ".claude/agents/builder.md": {
           "name": "builder",
           "tools": "Read, Grep, Glob, Bash, Edit, Write, Skill",
           "skills": "follow-the-rules",
           "model": "sonnet",
-          "effort": "high"
+          "effort": "medium"
         },
         ".claude/agents/reviewer.md": {
           "name": "reviewer",
           "tools": "Read, Grep, Glob, Bash, Skill",
           "skills": null,
-          "model": "opus",
+          "model": "sonnet",
           "effort": "high"
         },
         ".claude/agents/hall-monitor.md": {
           "name": "hall-monitor",
           "tools": "Read, Grep, Glob, Bash, Skill",
           "skills": "follow-the-rules",
-          "model": "sonnet",
+          "model": "haiku",
           "effort": "medium"
+        },
+        ".cursor/agents/planner.md": {
+          "name": "planner",
+          "model": "inherit",
+          "readonly": "true"
+        },
+        ".cursor/agents/grunt.md": {
+          "name": "grunt",
+          "model": "inherit",
+          "readonly": "false"
         },
         ".cursor/agents/builder.md": {
           "name": "builder",
@@ -133,11 +175,23 @@
           "model": "inherit",
           "readonly": "true"
         },
+        ".codex/agents/planner.toml": {
+          "name": "planner",
+          "sandbox_mode": null,
+          "model": "gpt-6-astra",
+          "model_reasoning_effort": "high"
+        },
+        ".codex/agents/grunt.toml": {
+          "name": "grunt",
+          "sandbox_mode": null,
+          "model": "gpt-6-luna",
+          "model_reasoning_effort": "low"
+        },
         ".codex/agents/builder.toml": {
           "name": "builder",
           "sandbox_mode": null,
           "model": "gpt-6.1-sol",
-          "model_reasoning_effort": "high"
+          "model_reasoning_effort": "medium"
         },
         ".codex/agents/reviewer.toml": {
           "name": "reviewer",
@@ -149,23 +203,25 @@
           "name": "hall-monitor",
           "sandbox_mode": null,
           "model": "gpt-6-luna",
-          "model_reasoning_effort": "high"
+          "model_reasoning_effort": "medium"
         },
         ".claude/agents/orchestrator.md": {
-          "model": "opus",
-          "effort": "high",
-          "tools": "Read, Grep, Glob, Agent(builder, reviewer, hall-monitor), SendMessage"
+          "model": "sonnet",
+          "effort": "medium",
+          "tools": "Read, Grep, Glob, Agent(planner, grunt, builder, reviewer, hall-monitor), SendMessage"
         },
         ".codex/config.toml": {
-          "model": "gpt-6-astra",
-          "model_reasoning_effort": "high"
+          "model": "gpt-6.1-sol",
+          "model_reasoning_effort": "medium"
         }
       },
       "expect_toml": [
         ".codex/config.toml",
         ".codex/agents/builder.toml",
         ".codex/agents/reviewer.toml",
-        ".codex/agents/hall-monitor.toml"
+        ".codex/agents/hall-monitor.toml",
+        ".codex/agents/grunt.toml",
+        ".codex/agents/planner.toml"
       ],
       "expect_no_match": [
         "^(?:claude|codex)_(?:model|effort|tools|sandbox):"
@@ -263,6 +319,20 @@
         "--force"
       ],
       "expect_metadata": {
+        ".claude/agents/planner.md": {
+          "name": "planner",
+          "tools": "Read, Grep, Glob",
+          "skills": null,
+          "model": "opus",
+          "effort": "high"
+        },
+        ".claude/agents/grunt.md": {
+          "name": "grunt",
+          "tools": "Bash",
+          "skills": null,
+          "model": "haiku",
+          "effort": "low"
+        },
         ".claude/agents/builder.md": {
           "name": "builder"
         }
@@ -279,15 +349,21 @@
           ".claude/agents/builder.md",
           ".claude/agents/reviewer.md",
           ".claude/agents/hall-monitor.md",
+          ".claude/agents/grunt.md",
+          ".claude/agents/planner.md",
           ".claude/agents/orchestrator.md",
           ".claude/settings.json",
           ".codex/agents/builder.toml",
           ".codex/agents/reviewer.toml",
           ".codex/agents/hall-monitor.toml",
+          ".codex/agents/grunt.toml",
+          ".codex/agents/planner.toml",
           ".codex/config.toml",
           ".cursor/agents/builder.md",
           ".cursor/agents/reviewer.md",
           ".cursor/agents/hall-monitor.md",
+          ".cursor/agents/grunt.md",
+          ".cursor/agents/planner.md",
           ".cursor/rules/orchestrator.mdc"
         ],
         "modified": [],
@@ -323,9 +399,9 @@
       "expect_metadata": {
         ".claude/agents/orchestrator.md": {
           "name": "orchestrator",
-          "tools": "Read, Grep, Glob, Agent(builder, reviewer, hall-monitor), SendMessage",
-          "model": "opus",
-          "effort": "high"
+          "tools": "Read, Grep, Glob, Agent(planner, grunt, builder, reviewer, hall-monitor), SendMessage",
+          "model": "sonnet",
+          "effort": "medium"
         },
         ".claude/settings.json": {
           "agent": "orchestrator"
@@ -388,7 +464,7 @@
         "codex"
       ],
       "expect_startswith": {
-        ".codex/config.toml": "# agent-setup:start\nmodel = \"gpt-6-astra\"\nmodel_reasoning_effort = \"high\"\ndeveloper_instructions = '''\n"
+        ".codex/config.toml": "# agent-setup:start\nmodel = \"gpt-6.1-sol\"\nmodel_reasoning_effort = \"medium\"\ndeveloper_instructions = '''\n"
       },
       "expect_endswith": {
         ".codex/config.toml": "# agent-setup:end\n\n[model_providers.local]\nname = \"local\"\n"
@@ -532,13 +608,19 @@
         ".claude/agents/builder.md",
         ".claude/agents/reviewer.md",
         ".claude/agents/hall-monitor.md",
+        ".claude/agents/grunt.md",
+        ".claude/agents/planner.md",
         ".claude/agents/orchestrator.md",
         ".codex/agents/builder.toml",
         ".codex/agents/reviewer.toml",
         ".codex/agents/hall-monitor.toml",
+        ".codex/agents/grunt.toml",
+        ".codex/agents/planner.toml",
         ".cursor/agents/builder.md",
         ".cursor/agents/reviewer.md",
         ".cursor/agents/hall-monitor.md",
+        ".cursor/agents/grunt.md",
+        ".cursor/agents/planner.md",
         ".cursor/rules/orchestrator.mdc"
       ]
     },
@@ -580,13 +662,19 @@
         ".claude/agents/builder.md",
         ".claude/agents/reviewer.md",
         ".claude/agents/hall-monitor.md",
+        ".claude/agents/grunt.md",
+        ".claude/agents/planner.md",
         ".claude/agents/orchestrator.md",
         ".codex/agents/builder.toml",
         ".codex/agents/reviewer.toml",
         ".codex/agents/hall-monitor.toml",
+        ".codex/agents/grunt.toml",
+        ".codex/agents/planner.toml",
         ".cursor/agents/builder.md",
         ".cursor/agents/reviewer.md",
         ".cursor/agents/hall-monitor.md",
+        ".cursor/agents/grunt.md",
+        ".cursor/agents/planner.md",
         ".cursor/rules/orchestrator.mdc"
       ],
       "expect_content": {
@@ -611,13 +699,19 @@
         ".claude/agents/builder.md",
         ".claude/agents/reviewer.md",
         ".claude/agents/hall-monitor.md",
+        ".claude/agents/grunt.md",
+        ".claude/agents/planner.md",
         ".claude/agents/orchestrator.md",
         ".codex/agents/builder.toml",
         ".codex/agents/reviewer.toml",
         ".codex/agents/hall-monitor.toml",
+        ".codex/agents/grunt.toml",
+        ".codex/agents/planner.toml",
         ".cursor/agents/builder.md",
         ".cursor/agents/reviewer.md",
         ".cursor/agents/hall-monitor.md",
+        ".cursor/agents/grunt.md",
+        ".cursor/agents/planner.md",
         ".cursor/rules/orchestrator.mdc",
         ".claude/settings.json",
         ".codex/config.toml"
@@ -658,7 +752,9 @@
         ".cursor/skills/orchestrate/SKILL.md",
         ".claude/agents/builder.md",
         ".claude/agents/reviewer.md",
-        ".claude/agents/hall-monitor.md"
+        ".claude/agents/hall-monitor.md",
+        ".claude/agents/grunt.md",
+        ".claude/agents/planner.md"
       ],
       "expect_content": {
         "AGENTS.md": "# Rules\n\nKeep functions small.\n",
@@ -668,7 +764,7 @@
     {
       "id": "text-budget",
       "text_budget": {
-        "max_words": 2400,
+        "max_words": 2950,
         "max_renderer_lines": 285,
         "forbidden": "serena|gstack|mattpocock|spec kit|\\bnpx\\b"
       }
@@ -840,25 +936,51 @@
       ],
       "expect_metadata": {
         ".claude/agents/orchestrator.md": {
-          "model": "opus",
-          "effort": "high",
-          "tools": "Read, Grep, Glob, Agent(builder, reviewer, hall-monitor), SendMessage"
+          "model": "sonnet",
+          "effort": "medium",
+          "tools": "Read, Grep, Glob, Agent(planner, grunt, builder, reviewer, hall-monitor), SendMessage"
         },
         ".codex/config.toml": {
-          "model": "gpt-6-astra",
-          "model_reasoning_effort": "high"
+          "model": "gpt-6.1-sol",
+          "model_reasoning_effort": "medium"
+        },
+        ".claude/agents/planner.md": {
+          "name": "planner",
+          "tools": "Read, Grep, Glob",
+          "skills": null,
+          "model": "opus",
+          "effort": "high"
+        },
+        ".claude/agents/grunt.md": {
+          "name": "grunt",
+          "tools": "Bash",
+          "skills": null,
+          "model": "haiku",
+          "effort": "low"
         },
         ".claude/agents/builder.md": {
           "model": "sonnet",
-          "effort": "high"
+          "effort": "medium"
+        },
+        ".codex/agents/planner.toml": {
+          "name": "planner",
+          "sandbox_mode": null,
+          "model": "gpt-6-astra",
+          "model_reasoning_effort": "high"
+        },
+        ".codex/agents/grunt.toml": {
+          "name": "grunt",
+          "sandbox_mode": null,
+          "model": "gpt-6-luna",
+          "model_reasoning_effort": "low"
         },
         ".codex/agents/builder.toml": {
           "model": "gpt-6.1-sol",
-          "model_reasoning_effort": "high",
+          "model_reasoning_effort": "medium",
           "sandbox_mode": null
         },
         ".claude/agents/reviewer.md": {
-          "model": "opus",
+          "model": "sonnet",
           "effort": "high"
         },
         ".codex/agents/reviewer.toml": {
@@ -867,12 +989,12 @@
           "sandbox_mode": null
         },
         ".claude/agents/hall-monitor.md": {
-          "model": "sonnet",
+          "model": "haiku",
           "effort": "medium"
         },
         ".codex/agents/hall-monitor.toml": {
           "model": "gpt-6-luna",
-          "model_reasoning_effort": "high",
+          "model_reasoning_effort": "medium",
           "sandbox_mode": null
         }
       },
@@ -880,7 +1002,9 @@
         ".codex/config.toml",
         ".codex/agents/builder.toml",
         ".codex/agents/reviewer.toml",
-        ".codex/agents/hall-monitor.toml"
+        ".codex/agents/hall-monitor.toml",
+        ".codex/agents/grunt.toml",
+        ".codex/agents/planner.toml"
       ]
     },
     {
@@ -952,7 +1076,7 @@
       ],
       "expect_metadata": {
         ".claude/agents/reviewer.md": {
-          "model": "opus",
+          "model": "sonnet",
           "effort": "high"
         },
         ".codex/agents/reviewer.toml": {
@@ -998,7 +1122,7 @@
         ".codex/config.toml": "sandbox_mode = \"workspace-write\"\n\n[profiles.fast]\nmodel = \"local\"\nmodel_reasoning_effort = \"low\"\n"
       },
       "expect_startswith": {
-        ".codex/config.toml": "# agent-setup:start\nmodel = \"gpt-6-astra\"\nmodel_reasoning_effort = \"high\"\n"
+        ".codex/config.toml": "# agent-setup:start\nmodel = \"gpt-6.1-sol\"\nmodel_reasoning_effort = \"medium\"\n"
       },
       "expect_toml": [
         ".codex/config.toml"
@@ -1009,20 +1133,42 @@
       "files": {
         ".codex/config.toml": "before = \"'''\"\nmodel = \"custom\"\nafter = \"'''\"\n"
       },
-      "args": ["--vars", "{vars}", "--hosts", "codex"],
+      "args": [
+        "--vars",
+        "{vars}",
+        "--hosts",
+        "codex"
+      ],
       "expect_exit": "nonzero",
-      "expect_changes": {"added": [], "removed": [], "modified": []},
-      "expect_output": [".codex/config.toml"]
+      "expect_changes": {
+        "added": [],
+        "removed": [],
+        "modified": []
+      },
+      "expect_output": [
+        ".codex/config.toml"
+      ]
     },
     {
       "id": "codex-comment-quotes-do-not-hide-model",
       "files": {
         ".codex/config.toml": "# '''\nmodel = \"custom\"\n# '''\n"
       },
-      "args": ["--vars", "{vars}", "--hosts", "codex"],
+      "args": [
+        "--vars",
+        "{vars}",
+        "--hosts",
+        "codex"
+      ],
       "expect_exit": "nonzero",
-      "expect_changes": {"added": [], "removed": [], "modified": []},
-      "expect_output": [".codex/config.toml"]
+      "expect_changes": {
+        "added": [],
+        "removed": [],
+        "modified": []
+      },
+      "expect_output": [
+        ".codex/config.toml"
+      ]
     },
     {
       "id": "codex-indented-profile-kept",
