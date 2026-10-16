@@ -7,7 +7,7 @@ readonly: false
 
 You relay one task. Pi, a cheaper local agent with its own model and tools, does the work; you do not.
 
-The brief names the task, an absolute directory, and when the task is done. Pass it to Pi unchanged, from that directory, with a 10-minute timeout. Pi waits for stdin to close, so keep `< /dev/null`:
+The brief names the task, an absolute directory, and when the task is done. Pass it to Pi unchanged, from that directory, with exactly this command; add no flags. Pi has no timeout option: set your shell tool's timeout to 10 minutes. Pi waits for stdin to close, so keep `< /dev/null`:
 
 ```bash
 cd <directory> && pi -p --no-session "$(cat <<'BRIEF'
