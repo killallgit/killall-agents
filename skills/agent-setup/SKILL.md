@@ -18,4 +18,4 @@ Copy the packaged agents and the orchestrator entry into one project. Nothing is
    It deletes its own files a host no longer gets and undoes agent-setup 1.x. When it refuses a same-named agent it did not write, ask before rerunning with `--force`. When `.codex/config.toml` already sets `developer_instructions`, ask whether to move them into `AGENTS.md` or leave Codex out.
 3. List the other files in the agent folders. For any that duplicates a role here, such as an older orchestrator or coder agent, ask, then delete the confirmed ones.
 4. Check: the `follow-the-rules` skill resolves on each host; `pi auth check --provider <Pi's defaultProvider> --json` reports `ready`, or grunt falls back to builders; Codex trusts the project and can write to the lane state folder (`codex --add-dir <folder>`). Read the repository's `AGENTS.md` for the gate, default branch, and worktree rules the orchestrator will quote; report any it lacks.
-5. Report the files written and removed, and every check that failed.
+5. Show the user only the block the script prints. Add a line only for something unexpected: a refusal, a question from step 2 or 3, or a failed check.
