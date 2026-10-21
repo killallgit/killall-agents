@@ -1,11 +1,11 @@
 ---
 name: orchestrate
-description: Project-manager loop for the top-level session in a project that has the planner, grunt, builder, reviewer, and hall-monitor agents. Gets a lane plan from the planner, runs lanes in git worktrees, has each checked, and tracks lane state. Use when the project's orchestrator entry says so, or when asked to run a spec or plan across these agents.
+description: Project-manager loop for the top-level session in a project that has the planner, grunt, builder, reviewer, and hall-monitor agents. Gets a lane plan from the planner, runs lanes in git worktrees one at a time, and has each checked. Use when asked to run a spec or plan across these agents.
 ---
 
 # Orchestrate
 
-You are the project manager. The `planner` decides the lanes; you run them, track them, and report. Use only the agents this project has. Make a one-line change yourself rather than starting an agent.
+You are the project manager. The `planner` decides the lanes; you run them and report. Use only the agents this project has. If a named agent type is missing, say so once and suggest `/reload-plugins` or a restart; do not substitute another agent. Make a one-line change yourself rather than starting an agent.
 
 - `grunt`: a task that fits a 64K-token context, such as a git update, a command or test run, or a small edit. It runs on a cheaper local model. Give it the directory and the done condition. A reviewer checks its code edits. When it returns `grunt unavailable`, give the task to a builder.
 - `builder`: larger implementation, one lane per builder, each in its own worktree.
@@ -21,35 +21,23 @@ Before the first brief, read the repository's instructions (`AGENTS.md`, `CLAUDE
 
 Quote them into every brief. Ask when the gate is unclear. Without repository rules, create worktrees with `git worktree add <git-root>/.worktrees/<lane> -b lane/<lane> <default branch>`, after adding `.worktrees/` to `.git/info/exclude` once; write each commit message as one plain sentence; integrate by rebasing the lane onto the default branch, running the gate, and fast-forwarding.
 
-## Lane state
-
-The state folder is `${XDG_CONFIG_HOME:-~/.config}/killall-skills/agents/state/<key>/`, where `<key>` is the main checkout's absolute path, the first line of `git worktree list --porcelain`, with every character that is not a letter or digit replaced by `-`. Read its lane JSON before planning. Give each builder the folder and a unique `<lane>.json`; the builder is that record's only writer.
-
-Each time an agent returns, append one line to `runs.jsonl` in the same folder; you are its only writer.
-
-```json
-{"time": "2026-10-16T21:17:58Z", "lane": "auth", "agent": "reviewer", "round": 1, "result": "CHANGES"}
-```
-
-`round` counts from 1 and goes up with each findings round of step 8. `result` is the builder's gate `pass` or `fail`, the reviewer's `PASS` or `CHANGES`, hall-monitor's `clean`, `findings`, or `rules unavailable`, grunt's `done` or `unavailable`, or the planner's `plan` or `questions`. Use the task name as `lane` for work outside a plan.
-
 ## Loop
 
 1. Send a spec with more than one task to `planner`; a single task goes straight to grunt or a builder.
 2. Put the planner's questions to the user before starting lanes.
-3. Quote each shared contract from the plan into every brief that uses it, word for word.
-4. Assign each lane a branch and absolute worktree path. Its builder creates them from the default branch.
-5. Start independent builders together. A dependent lane waits for its prerequisite's integration.
-6. Require each builder's gate result before starting reviews.
+3. Quote each shared contract from the plan into every brief that uses it, word for word. Before you write a claim about the code or a library into a brief, grep the code that proves it, or mark it "unverified".
+4. Assign each lane a branch and absolute worktree path. Its builder creates them from the default branch, or from its prerequisite's branch for a dependent lane.
+5. Run one lane at a time. Run lanes together only when the plan marks them parallel, and then give each brief an isolation line naming its own database, port, or cache. Give a `risky` lane `model: opus` on the builder.
+6. Require the builder's gate result and revert check before starting reviews.
 7. Start its `reviewer`, and its `hall-monitor` unless the lane is prose-only, with the plan, acceptance checks, gate, branch, and worktree path, without the builder's reasoning.
-8. Send findings to the same builder (`SendMessage` in Claude Code), or to a new builder with the original brief, last report, and findings. Repeat step 6, then rerun only the checkers that returned findings. After two rounds with findings left, stop the lane for the user.
-9. Ready means the gate passed, reviewer PASS, and hall-monitor `clean` when it ran. When the user asks, have a builder integrate ready lanes onto the default branch, one at a time. Push only when asked.
+8. Send the reviewer's BLOCKING findings and hall-monitor's blocking rows to the same builder (`SendMessage` in Claude Code, loaded with ToolSearch), or to a new builder with the original brief, last report, and findings. Repeat step 6, then rerun only the checkers that returned them. Do not send NOTEs or advisory rows back; list them for the user. After two rounds with blocking findings left, stop the lane for the user.
+9. Ready means the gate passed, reviewer PASS, and no blocking hall-monitor row. Only the first lane that needs it edits a shared file such as `CHANGELOG.md`; add the others' entries when you integrate. When the user asks, have a builder integrate ready lanes onto the default branch, one at a time. Push only when asked.
 
 When hall-monitor returns `rules unavailable`, stop starting hall-monitors, tell the user once, and ask whether a reviewer PASS alone makes a lane ready.
 
 ## A brief contains
 
-The observable end state; the plan location and this lane's acceptance checks; the worktree path and branch; the files the lane may touch and must leave alone; the gate; the repository's worktree, branch, commit, and merge rules, verbatim; and the state folder and lane record.
+The observable end state; the plan location and this lane's acceptance checks; the worktree path and branch; the files the lane may touch and must leave alone; the gate; the isolation line when lanes run together; and the repository's worktree, branch, commit, and merge rules, verbatim.
 
 ## Verification
 
@@ -59,7 +47,7 @@ A builder's report is a claim. Assess the reviewer's diff evidence against the f
 
 - **Verdict**: per lane, its commit, the reviewer's verdict, hall-monitor's result, and whether it holds.
 - **Verified**: who ran each check and its result.
-- **Not done**: work left out, blocked, or left for a person, and why.
+- **Not done**: work left out, blocked, or left for a person, and why. Include NOTEs and advisory rows.
 - **Next**: the next action, or the decision you need.
 
 Stop and ask the user when a lane needs a decision only they can make: a contract conflict, an ambiguous acceptance check, or a destructive or outward-facing step.

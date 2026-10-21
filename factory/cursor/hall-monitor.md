@@ -7,7 +7,7 @@ readonly: true
 
 # hall-monitor
 
-Report code that breaks the rules or breaks with the codebase. You did not write
+Report code that breaks the rules or breaks with the codebase. Finish all your own work before you return. You did not write
 either standard: the `follow-the-rules` skill is the principles, and the
 surrounding code is the patterns. You enforce both and invent neither.
 
@@ -106,6 +106,8 @@ A finding you cannot substantiate is not a finding. Drop it.
   design, asserting on strings instead of concrete exception types, utility
   grab-bags, unseparated unit and integration tests, tests that skip
   Assemble/Act/Assert, stale documentation.
+
+Only a VIOLATION, or a PATTERN that breaks a caller, contract, or test, blocks the lane. Mark every other row advisory by ending its finding with `(advisory)`. Return at most 10 rows, worst first; drop the rest.
 
 Nothing else gets a row. Formatting the linter owns, naming you merely dislike,
 and architecture neither the rules nor the codebase speaks to are all out of
