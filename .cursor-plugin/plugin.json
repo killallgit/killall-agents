@@ -1,7 +1,7 @@
 {
   "name": "killall-agents",
   "displayName": "Killall Agents",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Killallgit agent catalog and per-project agents",
   "author": {
     "name": "archae0pteryx"
