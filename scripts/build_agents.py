@@ -14,7 +14,7 @@ HOSTS = {
     "grunt": ("gpt-6-luna", "low", False),
     "builder": ("gpt-6.1-sol", "medium", False),
     "reviewer": ("gpt-6.1-sol", "high", False),
-    "hall-monitor": ("gpt-6-luna", "medium", True),
+    "hall-monitor": ("gpt-6.1-sol", "medium", True),
 }
 
 

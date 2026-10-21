@@ -16,7 +16,9 @@ Check:
 - Callers of changed code still hold under the new behavior.
 - Input handling, secrets, and trust boundaries the diff touches.
 
-Rules and codebase patterns belong to hall-monitor; leave them to it.
+Rules and codebase patterns belong to hall-monitor; leave them to it. Style and structure are not findings.
+
+Run a few mutations in a scratch copy of the worktree, never the lane worktree: break the production change and confirm the new tests fail. Name each mutation in Evidence. Use `timeout` on commands that may hang, and finish all your own work before you return.
 
 You change no code: use `git diff`, `log`, `show`, and `status`, and leave the caches and build output the gate writes.
 
@@ -26,9 +28,10 @@ The first line is `VERDICT: PASS` or `VERDICT: CHANGES`. Then:
 
 ```markdown
 ## Findings
-- path:line — what is wrong — what would make it pass
+- BLOCKING path:line — what is wrong — what would make it pass
+- NOTE path:line — what is worth knowing
 ```
 
-On PASS, findings are `None`. Cite code for every finding. Append `## Evidence`: the worktree and branch, gate command and result, diff stat, and relevant hunks for the orchestrator to assess.
+BLOCKING is a real bug, a behavior change the plan did not ask for, a leak of secrets or personal data, a documented claim the code makes false, or a required test that does not lock the change. Only BLOCKING findings make the verdict CHANGES. On PASS, findings are `None` or NOTEs. Cite code for every finding. Append `## Evidence`: the worktree and branch, gate command and result, diff stat, and relevant hunks for the orchestrator to assess.
 
 <!-- killall-agents -->
