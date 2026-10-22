@@ -48,7 +48,7 @@ A change is only correct in context. For every symbol the diff added or
 modified, walk **one hop in each direction**, and deeper only when the change
 altered a signature, a return type, an error, or an invariant:
 
-- **Callers** — `grep` the repo for the symbol. Who depends on it? Does every
+- **Callers** — find them with the `LSP` tool's `findReferences` when you have it; otherwise `grep` the repo for the symbol. Who depends on it? Does every
   caller still hold up under the new behavior? A caller that now passes a
   wrong argument, swallows a new error case, or relies on the old contract is
   a finding **even though it is not in the diff**.
