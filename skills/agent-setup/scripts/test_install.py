@@ -1,5 +1,6 @@
 """Checks install.py against a throwaway Git repository."""
 
+import json
 import os
 import subprocess
 import sys
@@ -34,7 +35,10 @@ def main() -> None:
 
         assert run(repo, CODEX_HOME=str(repo / ".codex")).returncode != 0, "installed into the user-wide Codex folder"
         assert not (repo / ".codex/agents").exists()
-        assert run(repo).returncode == 0
+        installed = run(repo)
+        assert installed.returncode == 0
+        version = json.loads((INSTALL.parents[3] / ".claude-plugin/plugin.json").read_text())["version"]
+        assert f"(killall-agents {version})" in installed.stdout
         for path in (".claude/agents/builder.md", ".codex/agents/planner.toml", ".cursor/agents/grunt.md"):
             assert (repo / path).is_file(), path
         assert not (repo / ".claude/agents/orchestrator.md").exists(), "old agent-setup output stays"

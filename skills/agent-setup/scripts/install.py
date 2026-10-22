@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import subprocess
 from pathlib import Path
 
 FACTORY = Path(__file__).resolve().parents[3] / "factory"
+VERSION = json.loads((FACTORY.parent / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))["version"]
 ROLES = ("planner", "grunt", "builder", "reviewer", "hall-monitor")
 NAMES = {"claude": "Claude Code", "codex": "Codex", "cursor": "Cursor"}
 FOLDERS = {"claude": Path(".claude/agents"), "codex": Path(".codex/agents"), "cursor": Path(".cursor/agents")}
@@ -97,7 +99,7 @@ def summary(dest: Path, hosts: list[str], copies: dict[Path, str]) -> str:
     if not hosts:
         return f"Agents removed from {dest}"
     rows = [f"  {NAMES[host]:<12} {', '.join(sorted((path.stem for path in copies if path.parent == FOLDERS[host]), key=ROLES.index))}" for host in hosts]
-    return f"Agents installed in {dest}\n" + "\n".join(rows)
+    return f"Agents installed in {dest} (killall-agents {VERSION})\n" + "\n".join(rows)
 
 
 if __name__ == "__main__":
