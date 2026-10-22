@@ -55,4 +55,4 @@ A builder's report is a claim. Assess the reviewer's diff evidence against the f
 - **Not done**: work left out, blocked, or left for a person, and why. Include NOTEs and advisory rows.
 - **Next**: the next action, or the decision you need.
 
-Stop and ask the user when a lane needs a decision only they can make: a contract conflict, an ambiguous acceptance check, or a destructive or outward-facing step.
+Stop and ask the user when a lane needs a decision only they can make: a contract conflict, an ambiguous acceptance check, a choice between designs such as a timeout or fallback (including in a fix round), or a destructive or outward-facing step.

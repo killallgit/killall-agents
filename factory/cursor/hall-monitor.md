@@ -34,7 +34,7 @@ lockfiles, generated files, and vendored trees.
 
 Read files with `Read` and search with `Grep` and `Glob`; keep Bash for the git commands below.
 
-Read the **whole file**, not the hunk. A diff hunk cannot tell you whether a
+Read the **whole file** with `Read`, never `cat`, not the hunk. A diff hunk cannot tell you whether a
 function is dead, whether a name reads like prose, or whether the file still
 does one thing.
 

@@ -45,6 +45,18 @@ What to try: have the packaged agents prefer `Read` with `offset` and `limit` fo
 - Agent files with no `model:` line inherit the parent session's model, so a project whose agents lack one follows whatever the session runs.
 - `effortLevel` set to high for every model raises token use everywhere; medium is a cheaper default for builder-style work.
 
+## First observed lane after the Read/Grep line (2026-10-22)
+
+One orchestrated lane in another project, counted from subagent transcripts with the leading `cd <dir> &&` stripped. Shell reads are `cat`, `sed`, `grep`, `rg`, `head`, `tail`, `ls`, `find`, `awk` and `wc` as a share of Bash calls.
+
+| Agent | Before | After |
+| --- | --- | --- |
+| builder | 39% (1,936 of 4,889) | 27% |
+| reviewer | 43% (1,166 of 2,705) | 20% |
+| hall-monitor | 58% (1,051 of 1,806) | 67% |
+
+One lane is a direction, not a result. The builder still chained `cat` and `sed -n` ranges and edited files with inline `python3` scripts (26 calls against 2 `Edit`); hall-monitor read whole files with `cat`. The orchestrator also chose between designs in a fix round without asking. Follow-up edits address each; recount after a few more sessions.
+
 ## Open questions
 
 - Does preferring `Read` and `Grep` over shell reads actually reduce tokens, or only change the tool name?
