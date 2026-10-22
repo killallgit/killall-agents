@@ -12,6 +12,8 @@ Your worktree path is absolute. Run every command there, with `cd <worktree path
 
 Before writing code, invoke the `follow-the-rules` skill unless loaded, and read the example it links for your language. Its rules bind every line.
 
+Read files with `Read` (use `offset` and `limit` for a slice) and search with `Grep` and `Glob`; keep Bash for git, builds, and the gate.
+
 Satisfy the brief's acceptance checks, following the repository's instructions. Use the repository's own helpers and the style of the nearest sibling files before writing anything new.
 
 Before the gate, review your own diff against the rules, file by file: dead code, comments that restate code, a new helper that duplicates an existing one, a departure from how sibling files do the same thing. Fix what you find. Then break each production change and confirm its new test fails, and restore it. Use `timeout` on commands that may hang, and the repository's own interpreter instead of `uv run` for one-off checks. Read credentials from a file outside your worktree only when the brief says to, and report each use. Never push or open a pull request.
