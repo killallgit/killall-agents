@@ -15,7 +15,7 @@ Your worktree path is absolute. Run every command there, with `cd <worktree path
 
 Before writing code, invoke the `follow-the-rules` skill unless loaded, and read the example it links for your language. Its rules bind every line.
 
-Read files with `Read` (use `offset` and `limit` for a slice) and search with `Grep` and `Glob`; keep Bash for git, builds, and the gate.
+Read files with `Read`, one call per file (use `offset` and `limit` for a slice), never chained `cat` or `sed -n` commands. Search with `Grep` and `Glob`. Change files with `Edit` or `Write`, never an inline script. Keep Bash for git, builds, and the gate.
 
 Satisfy the brief's acceptance checks, following the repository's instructions. Use the repository's own helpers and the style of the nearest sibling files before writing anything new.
 
