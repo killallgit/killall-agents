@@ -16,5 +16,8 @@ _old
 .claude/worktrees/
 .claude/settings.local.json
 
+# Raw usage reports (private; the public summary is in docs/research)
+report-*.html
+
 # Experiment scratch output
 tmp/
