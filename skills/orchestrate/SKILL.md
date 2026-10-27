@@ -42,7 +42,7 @@ When hall-monitor returns `rules unavailable`, stop starting hall-monitors, tell
 
 ## A brief contains
 
-The observable end state; the plan location and this lane's acceptance checks; the worktree path and branch; the files the lane may touch and must leave alone; the gate; the isolation line when lanes run together; and the repository's worktree, branch, commit, and merge rules, verbatim.
+The observable end state; the plan location and this lane's acceptance checks; the worktree path and branch; the files the lane may touch and must leave alone; the existing code it follows; the gate; the isolation line when lanes run together; and the repository's worktree, branch, commit, and merge rules, verbatim.
 
 ## Verification
 

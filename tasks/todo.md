@@ -24,7 +24,7 @@ Compare each agent with community definitions (Anthropic's `claude-plugins-offic
 - [x] reviewer: pre-existing problems are at most a NOTE, and hidden failures (broad catch, logged-and-ignored error, masking fallback, mock outside tests) are a check. Skipped the 0-100 confidence score from Anthropic's feature-dev code-reviewer: reviewer already cites code and runs mutations.
 - [ ] hall-monitor: `follow-the-rules` does not cover swallowed errors, and hall-monitor invents no standards, so that check went to reviewer. Open question: should hall-monitor report only what the diff introduced, or violations anywhere in the files it reads whole?
 - [x] comment-janitor: a KEEP must also be true, so each claim is checked against the code (from Anthropic's `comment-analyzer`). Fixed the `# commenator` heading, set `model: sonnet` and `effort: medium`, and added `Grep` with the Read/Grep steer the other agents carry. Left the long trigger-phrase description alone.
-- [ ] planner: cite the existing patterns found with file:line, as in Anthropic's `code-architect`.
+- [x] planner: each lane names the existing code it follows as path:line, and the orchestrate brief carries it to the builder (from Anthropic's `code-architect`). Skipped its "pick one approach and commit": orchestrate stops to ask the user on design choices.
 - [ ] git-janitor, git-janitor-investigator, grunt: no community analog worth taking; review only if wanted.
 - [ ] Frontmatter we do not use: `maxTurns`, `memory`, `permissionMode`, `omitClaudeMd`. Check the docs, then decide per agent.
 
