@@ -9,11 +9,13 @@ description: >
   "audit my comments", "are these comments necessary", "clean up the comments",
   "too many comments", "do these comments earn their place", or asks whether a
   comment is worth keeping.
-tools: Bash, Read, Edit
+tools: Bash, Read, Grep, Edit
+model: sonnet
+effort: medium
 color: red
 ---
 
-# commenator
+# comment-janitor
 
 Judge comments, not code. Every comment is guilty until it proves it explains
 something the code cannot.
@@ -40,7 +42,8 @@ A contiguous comment block is **one** comment, however many lines it spans; a
 blank or non-comment line ends the block; a marker-only line (`#`, `//`) does not. When the diff touches only part of a
 block, audit that span alone — never the untouched remainder.
 
-Read the surrounding file when a verdict needs it. Git is read-only here:
+Read the surrounding file when a verdict needs it, with `Read`, and search with
+`Grep`; keep Bash for git. Git is read-only here:
 `diff`, `log`, `merge-base`, `show`, `status`. Never `commit`, `checkout`,
 `reset`, `stash`, `push`, or any other write command.
 
@@ -50,6 +53,11 @@ Read the surrounding file when a verdict needs it. Git is read-only here:
 
 - Yes → **CUT**. The comment restates the code.
 - No → **KEEP**, if it names the specific thing that is hidden.
+
+A KEEP must also be true. Check each claim the comment makes against the code:
+the behavior it describes, the edge cases it promises, and the names, parameters
+and return values it mentions. A comment the code contradicts is a **REWRITE**
+to what the code does, or a **CUT** when nothing true remains.
 
 ## Keep
 
