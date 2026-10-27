@@ -52,7 +52,7 @@ A builder's report is a claim. Assess the reviewer's diff evidence against the f
 
 - **Verdict**: per lane, its commit, the reviewer's verdict, hall-monitor's result, and whether it holds.
 - **Verified**: who ran each check and its result.
-- **Not done**: work left out, blocked, or left for a person, and why. Include NOTEs and advisory rows.
+- **Not done**: work left out, blocked, or left for a person, and why. Include NOTEs, advisory rows, and builders' Noticed items.
 - **Next**: the next action, or the decision you need.
 
 Stop and ask the user when a lane needs a decision only they can make: a contract conflict, an ambiguous acceptance check, a choice between designs such as a timeout or fallback (including in a fix round), or a destructive or outward-facing step.

@@ -17,6 +17,9 @@ Check:
 - Tests lock the new behavior and would fail without the change.
 - Callers of changed code still hold under the new behavior.
 - Input handling, secrets, and trust boundaries the diff touches.
+- Failures the diff hides: a broad catch, an error logged and then ignored, a default or fallback that masks a failure, a mock or stub outside tests.
+
+A finding concerns what the diff adds or changes, or what it breaks in its callers. A problem that predates the diff is at most a NOTE.
 
 Rules and codebase patterns belong to hall-monitor; leave them to it. Style and structure are not findings.
 
