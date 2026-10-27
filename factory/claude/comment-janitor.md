@@ -115,3 +115,5 @@ If the diff added no comments, return `no added comments in scope`.
 Report only, unless the caller says apply. When applying: make the CUT and
 REWRITE edits, touch nothing else, then print the same table with an `applied`
 column.
+
+<!-- killall-agents -->

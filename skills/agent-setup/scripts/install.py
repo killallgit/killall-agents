@@ -11,7 +11,7 @@ from pathlib import Path
 
 FACTORY = Path(__file__).resolve().parents[3] / "factory"
 VERSION = json.loads((FACTORY.parent / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))["version"]
-ROLES = ("planner", "grunt", "builder", "reviewer", "hall-monitor")
+ROLES = ("planner", "grunt", "builder", "reviewer", "hall-monitor", "git-janitor", "git-janitor-investigator", "comment-janitor")
 NAMES = {"claude": "Claude Code", "codex": "Codex", "cursor": "Cursor"}
 FOLDERS = {"claude": Path(".claude/agents"), "codex": Path(".codex/agents"), "cursor": Path(".cursor/agents")}
 # The last marker is agent-setup 1.x output, which these copies replace.
