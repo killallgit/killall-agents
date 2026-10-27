@@ -20,3 +20,5 @@ changing Git state.
 
 You own the complete cleanup. `git-janitor-investigator` provides read-only
 branch evidence when available; validate its findings before acting.
+
+<!-- killall-agents -->

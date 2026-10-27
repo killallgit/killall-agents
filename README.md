@@ -28,16 +28,6 @@ npx skills add killallgit/killall-agents
 
 Includes `agent-setup`, `orchestrate` and `follow-the-rules`.
 
-## Agent catalog
-
-| Agent | Purpose |
-| --- | --- |
-| `git-janitor` | Runs the separately installed `killall-skills:git-janitor` skill in its own context |
-| `git-janitor-investigator` | Collects read-only branch/worktree evidence for the janitor |
-| `comment-janitor` | Reviews changed comments for useful intent |
-
-Claude Code loads these from the plugin. Mention `@agent-killall-agents:git-janitor` in a conversation to invoke the janitor directly. Keep `killall-skills` installed to use that agent's cleanup skill.
-
 ## Project agents
 
 Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex, inside a project. It copies these agents from [`factory/`](factory/) into the project's `.claude/agents/`, `.codex/agents/` and `.cursor/agents/`, keeps them out of Git through `.git/info/exclude`, and lists them in `.worktreeinclude` so Claude Code worktrees get them too. Nothing is installed globally. `remove` takes it all out again.
@@ -49,6 +39,16 @@ Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex, in
 | `builder` | Implements one lane in its own worktree | Sonnet / medium | `gpt-6.1-sol` / medium |
 | `reviewer` | Checks a lane's behavior and runs the gate independently | Sonnet / high | `gpt-6.1-sol` / high |
 | `hall-monitor` | Checks a lane against `follow-the-rules` and the codebase's patterns; read-only | Sonnet / medium | `gpt-6.1-sol` / medium |
+
+Claude Code also gets three utility agents. They have no Codex or Cursor copy.
+
+| Agent | Purpose |
+| --- | --- |
+| `git-janitor` | Runs the separately installed `killall-skills:git-janitor` skill in its own context. Mention `@agent-git-janitor` to invoke it directly |
+| `git-janitor-investigator` | Collects read-only branch/worktree evidence for the janitor |
+| `comment-janitor` | Reviews changed comments for useful intent |
+
+Installing the plugin adds no agents. Keep `killall-skills` installed to use `git-janitor`.
 
 Cursor agents inherit the session model. Ask the top-level session to use the [`orchestrate`](skills/orchestrate/SKILL.md) skill to run a spec. The skill is the project-manager loop: plan with the planner, run lanes with grunt and builders, check with reviewer and hall-monitor. Agents read the gate, branch and worktree rules from the project's own `AGENTS.md`.
 

@@ -83,3 +83,5 @@ superseded, disposable, valuable, or uncertain, with evidence. A three-dot
 diff describes files touched since divergence, not necessarily content absent
 from default. No Markdown table or extra prose; the main agent assembles the
 report and validates any proposed discard.
+
+<!-- killall-agents -->

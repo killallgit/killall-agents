@@ -1,6 +1,6 @@
 ---
 name: agent-setup
-description: Install, refresh, or remove the packaged planner, grunt, builder, reviewer, and hall-monitor agents in one project for Claude Code, Codex, and Cursor.
+description: Install, refresh, or remove the packaged planner, grunt, builder, reviewer, and hall-monitor agents, plus Claude Code's git-janitor and comment-janitor agents, in one project for Claude Code, Codex, and Cursor.
 disable-model-invocation: true
 argument-hint: "[remove] [path]"
 ---

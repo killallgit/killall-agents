@@ -41,6 +41,9 @@ def main() -> None:
         assert f"(killall-agents {version})" in installed.stdout
         for path in (".claude/agents/builder.md", ".codex/agents/planner.toml", ".cursor/agents/grunt.md"):
             assert (repo / path).is_file(), path
+        for name in ("git-janitor", "git-janitor-investigator", "comment-janitor"):
+            assert (repo / f".claude/agents/{name}.md").is_file(), name
+            assert not list((repo / ".codex/agents").glob(f"{name}.*")) and not list((repo / ".cursor/agents").glob(f"{name}.*")), f"{name} is Claude-only"
         assert not (repo / ".claude/agents/orchestrator.md").exists(), "old agent-setup output stays"
         assert (repo / ".claude/agents/mine.md").is_file(), "foreign agent removed"
         assert "/.codex/agents/planner.toml\n" in exclude.read_text()
