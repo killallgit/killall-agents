@@ -26,6 +26,6 @@ Compare each agent with community definitions (Anthropic's `claude-plugins-offic
 - [x] comment-janitor: a KEEP must also be true, so each claim is checked against the code (from Anthropic's `comment-analyzer`). Fixed the `# commenator` heading, set `model: sonnet` and `effort: medium`, and added `Grep` with the Read/Grep steer the other agents carry. Left the long trigger-phrase description alone.
 - [x] planner: each lane names the existing code it follows as path:line, and the orchestrate brief carries it to the builder (from Anthropic's `code-architect`). Skipped its "pick one approach and commit": orchestrate stops to ask the user on design choices.
 - [ ] git-janitor, git-janitor-investigator, grunt: no community analog worth taking; review only if wanted.
-- [ ] Frontmatter we do not use: `maxTurns`, `memory`, `permissionMode`, `omitClaudeMd`. Check the docs, then decide per agent.
+- [x] Frontmatter: `maxTurns` on grunt (5), git-janitor-investigator (20) and hall-monitor (15); `omitClaudeMd` on grunt and the investigator, which need no project instructions. Skipped `memory` (it grants write tools and writes runtime state into the repo) and `permissionMode: plan` (it would block the reviewer's gate run). The turn limits are guesses; adjust if an agent comes back partial.
 
 Keep `scripts/build_agents.py --check` and `test_install.py` passing throughout.

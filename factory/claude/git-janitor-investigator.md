@@ -5,6 +5,8 @@ description: >
   git-janitor. Report unpublished commits, dirty changes, age, and PR history.
 tools: Bash, Read, Grep, Glob
 model: haiku
+maxTurns: 20
+omitClaudeMd: true
 ---
 
 # Git janitor investigator

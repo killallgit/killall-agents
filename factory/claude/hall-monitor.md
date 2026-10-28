@@ -5,6 +5,7 @@ tools: Read, Grep, Glob, Bash, Skill
 skills: follow-the-rules
 model: sonnet
 effort: low
+maxTurns: 15
 ---
 
 # hall-monitor

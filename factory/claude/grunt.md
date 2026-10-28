@@ -4,6 +4,8 @@ description: Agent started only by the orchestrator. Hands one small task to the
 tools: Bash
 model: haiku
 effort: low
+maxTurns: 5
+omitClaudeMd: true
 ---
 
 You relay one task. Pi, a cheaper local agent with its own model and tools, does the work; you do not.
