@@ -44,11 +44,11 @@ Claude Code also gets three utility agents. They have no Codex or Cursor copy.
 
 | Agent | Purpose |
 | --- | --- |
-| `git-janitor` | Runs the separately installed `killall-skills:git-janitor` skill in its own context. Mention `@agent-git-janitor` to invoke it directly |
+| `git-janitor` | Wraps up finished work: fast-forwards or rebases local branches, checks the main checkout is clean and no work is stranded, then proposes removing merged worktrees and branches. Mention `@agent-git-janitor` to invoke it directly |
 | `git-janitor-investigator` | Collects read-only branch/worktree evidence for the janitor |
 | `comment-janitor` | Reviews changed comments for useful intent |
 
-Installing the plugin adds no agents. Keep `killall-skills` installed to use `git-janitor`.
+Installing the plugin adds no agents.
 
 Cursor agents inherit the session model. Ask the top-level session to use the [`orchestrate`](skills/orchestrate/SKILL.md) skill to run a spec. The skill is the project-manager loop: plan with the planner, run lanes with grunt and builders, check with reviewer and hall-monitor. Agents read the gate, branch and worktree rules from the project's own `AGENTS.md`.
 

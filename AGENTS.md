@@ -12,6 +12,6 @@ python3 skills/agent-setup/scripts/test_install.py
 git diff --check
 ```
 
-`skills/follow-the-rules/` is an independent copy from [killall-skills](https://github.com/killallgit/killall-skills/tree/a016d77ff5f86821f0292a5a00dbf4600b0d8a15/skills/follow-the-rules); preserve its relative reference links. Keep agents out of a root `agents/` folder, which Claude Code loads on plugin install; they belong in `factory/` so only `agent-setup` installs them. The git-janitor agent still requires the separately installed `killall-skills:git-janitor` skill.
+`skills/follow-the-rules/` is an independent copy from [killall-skills](https://github.com/killallgit/killall-skills/tree/a016d77ff5f86821f0292a5a00dbf4600b0d8a15/skills/follow-the-rules); preserve its relative reference links. Keep agents out of a root `agents/` folder, which Claude Code loads on plugin install; they belong in `factory/` so only `agent-setup` installs them.
 
 Pending grunt and setup TUI work is tracked in `tasks/todo.md`.
