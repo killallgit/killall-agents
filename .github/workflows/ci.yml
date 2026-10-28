@@ -22,3 +22,5 @@ jobs:
         run: python3 scripts/build_agents.py --check
       - name: Project install
         run: python3 skills/agent-setup/scripts/test_install.py
+      - name: Catalog and interactive install
+        run: python3 skills/agent-setup/scripts/test_catalog.py

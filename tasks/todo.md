@@ -11,9 +11,9 @@ Grunt is a thin host agent (Claude Haiku, Codex `gpt-6-luna`) that relays one ta
 
 ## Setup TUI
 
-- [ ] Add a terminal picker for host and agents, show required dependencies, and confirm the selection before applying. Keep `install.py` usable without the picker.
+- [x] Add a terminal picker for host and agents, and confirm the selection before applying. Keep `install.py` usable without the picker. `install.py` with no flags asks scope, tools, a multi-select of agents, and the catalog models; a rerun preselects what is installed; `q` or end of input writes nothing. Still open: show required dependencies (`pi`, `follow-the-rules`) in the confirmation.
 - [ ] Configure grunt from discovered local harness/provider profiles, preselecting existing defaults. Persist harness/model/effort/context settings locally without putting credentials or endpoints in the packaged agents.
-- [ ] Install selected agents and accepted dependencies only. Refresh owned definitions on rerun; preserve unrelated files and unselected existing agents. Cancellation before apply writes nothing.
+- [x] Install selected agents only. A rerun refreshes owned definitions and keeps every file it did not write; cancellation before apply writes nothing. Dependencies are not installed yet.
 - [ ] Test selection, dependencies, cancellation, reruns, unavailable harnesses and saved grunt settings driving a real job.
 
 # Agent definition review
@@ -31,3 +31,13 @@ Compare each agent with community definitions (Anthropic's `claude-plugins-offic
 - [x] Frontmatter: `maxTurns` on grunt (5), git-janitor-investigator (20) and hall-monitor (15); `omitClaudeMd` on grunt and the investigator, which need no project instructions. Skipped `memory` (it grants write tools and writes runtime state into the repo) and `permissionMode: plan` (it would block the reviewer's gate run). The turn limits are guesses; adjust if an agent comes back partial.
 
 Keep `scripts/build_agents.py --check` and `test_install.py` passing throughout.
+
+# Engineering catalog
+
+The 24 engineering agents from agency-agents (MIT) live in `factory/catalog/`, one source file each, and the installer renders them per host with the model, effort, tools, and sandbox filled in. Trimmed by dropping the persona, memory, metrics and advanced-capability sections and most sample code (315 KB to under 200 KB).
+
+- [x] Models, effort, `tools`, `maxTurns` and Codex `sandbox_mode` set on every agent.
+- [ ] Judge the trimmed agents by using them, as with the lane agents: watch for guidance the trimmed code samples or "Communication Style" sections used to supply. The eight largest were hand-trimmed (28 KB down to 17 KB at most); the rest only lost the boilerplate sections.
+- [ ] Verify live that Codex enforces `sandbox_mode = "read-only"` from an agent file; the config schema accepts it, but no Codex agent has been run with it.
+- [ ] Pull upstream changes: the catalog is a trimmed fork, so a new agency-agents release has to be merged by hand.
+- [ ] Persist the chosen catalog models between runs instead of asking again.
