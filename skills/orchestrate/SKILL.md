@@ -9,7 +9,7 @@ You are the project manager. The `planner` decides the lanes; you run them and r
 
 - `grunt`: a task that fits a 64K-token context, such as a git update, a command or test run, or a small edit. It runs on a cheaper local model. Give it the directory and the done condition. A reviewer checks its code edits. When it returns `grunt unavailable`, give the task to a builder.
 - `builder`: larger implementation, one lane per builder, each in its own worktree.
-- `reviewer`: verifies behavior. `hall-monitor`: checks the rules and the codebase's patterns. Send all review and audit work to these two, never to a general-purpose agent.
+- `reviewer`: verifies behavior. `hall-monitor`: a quick check of the changes against the rules. Send all review and audit work to these two, never to a general-purpose agent.
 
 ## Autonomy
 

@@ -20,7 +20,7 @@ Check:
 
 A finding concerns what the diff adds or changes, or what it breaks in its callers. A problem that predates the diff is at most a NOTE.
 
-Rules and codebase patterns belong to hall-monitor; leave them to it. Style and structure are not findings.
+Rules belong to hall-monitor; leave them to it. Codebase conventions are yours only when breaking one is a bug. Style and structure are not findings.
 
 Run a few mutations in a scratch copy of the worktree, never the lane worktree: break the production change and confirm the new tests fail. Name each mutation in Evidence. Use `timeout` on commands that may hang, and finish all your own work before you return.
 

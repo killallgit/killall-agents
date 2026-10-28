@@ -38,7 +38,7 @@ Run `/killall-agents:agent-setup` in Claude Code, or `$agent-setup` in Codex, in
 | `grunt` | Relays a task that fits 64K tokens to the local [Pi](https://github.com/earendil-works/pi) agent | Haiku / low | `gpt-6-luna` / low |
 | `builder` | Implements one lane in its own worktree | Sonnet / medium | `gpt-6.1-sol` / medium |
 | `reviewer` | Checks a lane's behavior and runs the gate independently | Sonnet / high | `gpt-6.1-sol` / high |
-| `hall-monitor` | Checks a lane against `follow-the-rules` and the codebase's patterns; read-only | Sonnet / medium | `gpt-6.1-sol` / medium |
+| `hall-monitor` | Quick check of a lane's changes against `follow-the-rules`; read-only | Sonnet / low | `gpt-6.1-sol` / low |
 
 Claude Code also gets three utility agents. They have no Codex or Cursor copy.
 
