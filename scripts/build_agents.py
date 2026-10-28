@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 FACTORY = ROOT / "factory"
 # Codex model, Codex reasoning effort, Cursor readonly; Cursor agents inherit the session model.
+# The model ids repeat the tiers in skills/agent-setup/scripts/catalog.py; test_catalog.py checks that they agree.
 HOSTS = {
     "planner": ("gpt-6-astra", "high", True),
     "grunt": ("gpt-6-luna", "low", False),

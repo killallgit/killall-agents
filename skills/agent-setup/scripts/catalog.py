@@ -7,9 +7,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 CATALOG = Path(__file__).resolve().parents[3] / "factory" / "catalog"
-PREFIX = "engineering-"
 MARKER = "killall-agents"
 # A source names its model by tier; each host maps a tier to a model id the user can override.
+# The Codex ids repeat those in scripts/build_agents.py; test_catalog.py checks that they agree.
 DEFAULT_MODELS = {
     "claude": {"opus": "opus", "sonnet": "sonnet", "haiku": "haiku"},
     "codex": {"opus": "gpt-6-astra", "sonnet": "gpt-6.1-sol", "haiku": "gpt-6-luna"},
@@ -56,10 +56,10 @@ def plain(value: str) -> str:
 
 def render(host: str, agent: Agent, models: dict[str, dict[str, str]]) -> tuple[str, str]:
     """Returns the file name and content of one agent for one host."""
-    meta, name = agent.meta, PREFIX + agent.slug
+    meta, name = agent.meta, agent.slug
     tier = meta["model"]
     if host == "claude":
-        front = [("name", meta["name"]), ("description", plain(meta["description"])), ("tools", meta["tools"]), ("model", models["claude"][tier]),
+        front = [("name", plain(meta["name"])), ("description", plain(meta["description"])), ("tools", meta["tools"]), ("model", models["claude"][tier]),
                  ("effort", meta["effort"]), ("maxTurns", meta["maxTurns"]), ("color", plain(meta["color"]))]
         return name + ".md", "---\n" + "".join(f"{k}: {v}\n" for k, v in front) + f"---\n\n{agent.body}\n<!-- {MARKER} -->\n"
     if host == "cursor":

@@ -57,6 +57,8 @@ def main() -> None:
         assert status == "?? .claude/agents/mine.md\n?? .codex/config.toml\n?? CLAUDE.local.md\n", status
 
         assert run(repo, "--hosts", "claude").returncode == 0
+        assert (repo / ".codex/agents/planner.toml").is_file(), "a run without --prune keeps the other hosts' copies"
+        assert run(repo, "--hosts", "claude", "--prune").returncode == 0
         assert not (repo / ".codex/agents").exists(), "unselected host kept its copies"
         assert not (repo / ".cursor").exists()
 

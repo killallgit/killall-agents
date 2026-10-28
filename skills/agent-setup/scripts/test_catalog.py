@@ -37,7 +37,7 @@ def check_render() -> None:
     models = {"claude": dict(catalog.DEFAULT_MODELS["claude"]), "codex": {**catalog.DEFAULT_MODELS["codex"], "opus": "gpt-test"}}
     for agent in catalog.load():
         name, text = catalog.render("claude", agent, models)
-        assert name == f"engineering-{agent.slug}.md" and text.rstrip().endswith("<!-- killall-agents -->")
+        assert name == f"{agent.slug}.md" and text.rstrip().endswith("<!-- killall-agents -->")
         front = text.split("\n---\n", 1)[0]
         assert f"model: {agent.meta['model']}\n" in front + "\n"
         assert not any(line.startswith("color: #") for line in front.splitlines()), f"{agent.slug}: an unquoted # starts a YAML comment"
@@ -48,6 +48,15 @@ def check_render() -> None:
         assert data["developer_instructions"].strip() == agent.body.strip()
         assert (data.get("sandbox_mode") == "read-only") == agent.readonly == ("Edit" not in agent.meta["tools"] and "Write" not in agent.meta["tools"])
         assert f"readonly: {str(agent.readonly).lower()}" in catalog.render("cursor", agent, models)[1]
+
+
+def check_codex_models() -> None:
+    """The lane agents' Codex ids are written in scripts/build_agents.py; the catalog tiers must not drift from them."""
+    sys.path.insert(0, str(HERE.parents[2] / "scripts"))
+    import build_agents
+
+    lane_ids = {model for model, _, _ in build_agents.HOSTS.values()}
+    assert lane_ids == set(catalog.DEFAULT_MODELS["codex"].values()), (lane_ids, catalog.DEFAULT_MODELS["codex"])
 
 
 def run(env: dict[str, str], *args: str, stdin: str | None = None, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -61,6 +70,7 @@ def names(folder: Path) -> list[str]:
 def main() -> None:
     check_sources()
     check_render()
+    check_codex_models()
     with tempfile.TemporaryDirectory() as tmp:
         user = Path(tmp) / "user"
         env = {"HOME": str(user), "CLAUDE_CONFIG_DIR": f"{user}/.claude", "CODEX_HOME": f"{user}/.codex"}
@@ -79,22 +89,25 @@ def main() -> None:
         assert run(env, "--scope", "user", "--agents", "nope").returncode != 0
         assert run(env, "--scope", "user", "--model", "codex:opus").returncode != 0
 
-        (claude / "engineering-sre.md").write_text("my own sre\n")
+        (claude / "sre.md").write_text("my own sre\n")
         (claude / "mine.md").write_text("unrelated\n")
+        (claude / "notes.md").write_text("# killall-agents\nmy notes, which mention the marker\n")
         refused = run(env, "--scope", "user", "--hosts", "claude", "--agents", "sre")
         assert refused.returncode != 0 and "--force" in refused.stderr
-        assert (claude / "engineering-sre.md").read_text() == "my own sre\n"
+        assert (claude / "sre.md").read_text() == "my own sre\n"
         assert run(env, "--scope", "user", "--hosts", "claude", "--agents", "sre", "--force").returncode == 0
-        assert names(claude) == ["engineering-sre.md", "mine.md"], "a rerun keeps files that are not ours and drops our unselected ones"
-        assert names(codex) == [], "an unselected host loses our copies"
+        assert len(names(claude)) == total + 2 and len(names(codex)) == total, "a flags run adds to what is installed"
+        assert run(env, "--scope", "user", "--hosts", "claude", "--agents", "sre", "--prune").returncode == 0
+        assert names(claude) == ["mine.md", "notes.md", "sre.md"], "--prune drops our unselected copies and keeps files that are not ours"
+        assert names(codex) == [], "--prune drops an unselected host's copies"
 
         # Interactive. Claude is preselected because it holds our copy; clearing it asks again, then Codex joins,
         # two agents replace the preselected one, and one Codex model changes.
         asked = run(env, "--interactive", stdin="1\n1\n\n2\n\nn 1-2\n\ny\n\ngpt-test\ny\n")
         assert asked.returncode == 0, asked.stderr
         assert "pick at least one tool" in asked.stdout
-        assert names(claude) == ["engineering-autonomous-optimization-architect.md", "engineering-backend-architect.md", "mine.md"]
-        assert tomllib.loads((codex / "engineering-backend-architect.toml").read_text())["model"] == "gpt-test"
+        assert names(claude) == ["autonomous-optimization-architect.md", "backend-architect.md", "mine.md", "notes.md"]
+        assert tomllib.loads((codex / "backend-architect.toml").read_text())["model"] == "gpt-test"
         # A rerun starts from what is installed, so accepting every default keeps the same two.
         again = run(env, "--interactive", stdin="1\n\n\n\ny\n")
         assert again.returncode == 0 and len(names(codex)) == 2, again.stdout
@@ -103,7 +116,7 @@ def main() -> None:
         assert run(env, "--interactive", stdin="1\n").returncode != 0, "end of input is a cancel"
 
         assert run(env, "--scope", "user", "--remove").returncode == 0
-        assert names(claude) == ["mine.md"] and names(codex) == []
+        assert names(claude) == ["mine.md", "notes.md"] and names(codex) == []
 
         # Project scope takes catalog agents beside the lane agents and lists them in Git's exclude file.
         repo = Path(tmp) / "repo"
@@ -111,11 +124,11 @@ def main() -> None:
         done = run(env, "--dest", str(repo), "--hosts", "claude", "--agents", "lanes,code-reviewer")
         assert done.returncode == 0, done.stderr
         assert "planner" in done.stdout and "1 engineering" in done.stdout
-        assert (repo / ".claude/agents/engineering-code-reviewer.md").is_file()
-        assert "/.claude/agents/engineering-code-reviewer.md\n" in (repo / ".git/info/exclude").read_text()
+        assert (repo / ".claude/agents/code-reviewer.md").is_file()
+        assert "/.claude/agents/code-reviewer.md\n" in (repo / ".git/info/exclude").read_text()
         piped = run(env, "--interactive", stdin="2\n2\n\n\n\ny\n", cwd=repo)
         assert piped.returncode == 0, piped.stdout + piped.stderr
-        for path in (".claude/agents/engineering-code-reviewer.md", ".codex/agents/engineering-code-reviewer.toml", ".codex/agents/planner.toml"):
+        for path in (".claude/agents/code-reviewer.md", ".codex/agents/code-reviewer.toml", ".codex/agents/planner.toml"):
             assert (repo / path).is_file(), f"{path}: the picker keeps what was installed and adds Codex"
         assert run(env, "--dest", str(repo), "--remove").returncode == 0
         assert not (repo / ".claude").exists() and not (repo / ".codex").exists()

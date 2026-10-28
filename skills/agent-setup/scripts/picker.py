@@ -28,7 +28,7 @@ def ask_one(title: str, options: list[tuple[str, str]], default: str) -> str:
         answer = read("Choose one, Enter for the default, q to quit: ")
         if not answer:
             return default
-        if answer.isdigit() and 1 <= int(answer) <= len(keys):
+        if answer.isascii() and answer.isdigit() and 1 <= int(answer) <= len(keys):
             return keys[int(answer) - 1]
         print(f"  enter a number from 1 to {len(keys)}")
 
@@ -48,12 +48,12 @@ def ask_many(title: str, options: list[tuple[str, str, str]], selected: set[str]
         answer = read("Toggle numbers (1,3-5), a = all, n = none, Enter = accept, q = quit: ")
         if not answer:
             return [key for key in keys if key in chosen]
-        picks, bad = set(), []
+        picks, bad, reset = set(), [], chosen
         for token in re.split(r"[,\s]+", answer.lower()):
             if token == "a":
-                chosen = set(keys)
+                reset = set(keys)
             elif token == "n":
-                chosen = set()
+                reset = set()
             elif m := re.fullmatch(r"(\d+)(?:-(\d+))?", token):
                 low, high = int(m[1]), int(m[2] or m[1])
                 if 1 <= low <= high <= len(keys):
@@ -65,7 +65,7 @@ def ask_many(title: str, options: list[tuple[str, str, str]], selected: set[str]
         if bad:
             print(f"  not understood: {', '.join(bad)}")
             continue
-        chosen ^= picks
+        chosen = reset ^ picks
 
 
 def confirm(question: str, default: bool = True) -> bool:
