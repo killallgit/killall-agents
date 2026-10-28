@@ -26,7 +26,7 @@ Skills CLI (setup and rules only):
 npx skills add killallgit/killall-agents
 ```
 
-Includes `agent-setup`, `orchestrate` and `follow-the-rules`.
+Includes `agent-setup`, `orchestrate`, `wrap-up` and `follow-the-rules`.
 
 ## Project agents
 
@@ -44,11 +44,11 @@ Claude Code also gets three utility agents. They have no Codex or Cursor copy.
 
 | Agent | Purpose |
 | --- | --- |
-| `git-janitor` | Wraps up finished work: fast-forwards or rebases local branches, checks the main checkout is clean and no work is stranded, then proposes removing merged worktrees and branches. Mention `@agent-git-janitor` to invoke it directly |
+| `git-janitor` | Haiku background runner for the [`wrap-up`](skills/wrap-up/SKILL.md) skill: runs its script and returns the table, or the one roadblock that needs you |
 | `git-janitor-investigator` | Collects read-only branch/worktree evidence for the janitor |
 | `comment-janitor` | Reviews changed comments for useful intent |
 
-Installing the plugin adds no agents.
+Installing the plugin adds no agents. Run the `wrap-up` skill after a PR lands: it confirms the work merged and nothing is stranded, updates the main checkout, grooms beads, prunes merged worktrees and branches, and asks only about what is left.
 
 Cursor agents inherit the session model. Ask the top-level session to use the [`orchestrate`](skills/orchestrate/SKILL.md) skill to run a spec. The skill is the project-manager loop: plan with the planner, run lanes with grunt and builders, check with reviewer and hall-monitor. Agents read the gate, branch and worktree rules from the project's own `AGENTS.md`.
 

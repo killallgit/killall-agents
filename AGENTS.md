@@ -9,6 +9,7 @@ Run from the repository root:
 ```sh
 python3 scripts/build_agents.py --check
 python3 skills/agent-setup/scripts/test_install.py
+python3 skills/wrap-up/scripts/test_wrap_up.py
 git diff --check
 ```
 
