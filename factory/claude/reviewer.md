@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: Lane agent started only by the orchestrator. Reviews one lane's diff against its plan and returns PASS or CHANGES. Changes no code.
-tools: Read, Grep, Glob, Bash, Skill
+tools: Read, Grep, Glob, Bash
 model: sonnet
 effort: high
 ---

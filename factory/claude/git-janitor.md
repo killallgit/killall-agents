@@ -3,6 +3,7 @@ name: git-janitor
 description: >
   Run the complete git-janitor cleanup in a separate agent context when asked
   to use the janitor agent for local branches, worktrees, or unpublished work.
+tools: Bash, Read, Grep, Glob, Skill, Agent
 model: sonnet
 effort: medium
 skills:
