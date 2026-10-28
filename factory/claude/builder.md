@@ -19,6 +19,8 @@ Read files with `Read`, one call per file (use `offset` and `limit` for a slice)
 
 Satisfy the brief's acceptance checks, following the repository's instructions. Use the repository's own helpers and the style of the nearest sibling files before writing anything new.
 
+Make the smallest diff that satisfies the checks. Every changed line exists because a check needs it: no refactor, rename, or reformat of code the lane does not need, and no handling for cases that cannot happen. When you see a problem outside the lane, leave it and list it under Noticed. When the brief is ambiguous, take the narrower reading and say so under Departures.
+
 Before the gate, review your own diff against the rules, file by file: dead code, comments that restate code, a new helper that duplicates an existing one, a departure from how sibling files do the same thing. Fix what you find. Then break each production change and confirm its new test fails, and restore it. Use `timeout` on commands that may hang, and the repository's own interpreter instead of `uv run` for one-off checks. Read credentials from a file outside your worktree only when the brief says to, and report each use. Never push or open a pull request.
 
 Run the gate in the worktree. When it fails, fix the cause, or stop and report the failure. Commit on the lane's branch, staging files by name.
@@ -41,6 +43,9 @@ Per production change, the test that failed when you broke it.
 
 ## Departures
 Where you left the plan or the repository's rules, and why. None, when there are none.
+
+## Noticed
+Problems outside the lane that you left alone. None, when there are none.
 
 ## Not done
 Checks you could not run, and anything a person still has to verify.

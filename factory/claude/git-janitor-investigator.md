@@ -2,9 +2,11 @@
 name: git-janitor-investigator
 description: >
   Read-only investigation of one local Git branch and its linked worktree for
-  git-janitor. Report unpublished commits, dirty changes, age, and PR history.
+  wrap-up. Report unpublished commits, dirty changes, age, and PR history.
 tools: Bash, Read, Grep, Glob
 model: haiku
+maxTurns: 20
+omitClaudeMd: true
 ---
 
 # Git janitor investigator
@@ -61,13 +63,13 @@ Apply in order:
 
 1. Failed or conflicting evidence → `REVIEW`.
 2. Branch tip reachable from default → `MERGED_CLEANUP` candidate.
-3. Last commit older than 60 days → `OLD_DELETE` candidate, even if unmerged
-   or unpublished. Dirty working changes still require separate assessment.
+3. Last commit older than 60 days → `STALE`. Age is evidence, not a reason to
+   delete. Dirty working changes still require separate assessment.
 4. Work clearly landed or superseded → `SUPERSEDED_DELETE` candidate.
 5. Active or unclear work → `KEEP_REVIEW`.
 
 A recommendation is evidence for the main agent, not an instruction to mutate.
-An open PR is report context, not a veto on the user's 60-day local rule.
+An open PR is report context.
 Classify dirty worktree content separately: a recent file can be valuable
 even when the branch's last commit is old.
 
