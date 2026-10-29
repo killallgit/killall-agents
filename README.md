@@ -26,19 +26,19 @@ Skills CLI (setup and rules only):
 npx skills add killallgit/killall-agents
 ```
 
-Includes `agent-setup`, `orchestrate`, `wrap-up`, `follow-the-rules`.
+Includes `setup-agents`, `orchestrate`, `wrap-up`, `follow-the-rules`.
 
 ## Install agents
 
 Run installer in terminal, answer questions:
 
 ```sh
-python3 skills/agent-setup/scripts/install.py
+python3 skills/setup-agents/scripts/install.py
 ```
 
 Asks where agents go (user-wide or current project), which tools (Claude Code, Codex, Cursor), which agents from multi-select, then model for each catalog tier. Confirms before writing anything. Type `q` to quit. Rerun starts from what is already installed; prompts make folders match selection: remove copies it wrote that you deselected, keep every other file.
 
-In session, `/killall-agents:agent-setup` in Claude Code or `$agent-setup` in Codex runs same script with flags: `--scope user|project`, `--hosts claude,codex`, `--agents lanes,catalog,<names>`, `--model codex:opus=<id>`, `--remove`, and `--force` to replace same-named agent it did not write. Flags add to what is installed; `--prune` also removes copies you did not select. No `--scope`: flags install into current project, prompts suggest user-wide.
+In session, `/killall-agents:setup-agents` in Claude Code or `$setup-agents` in Codex runs same script with flags: `--scope user|project`, `--hosts claude,codex`, `--agents lanes,catalog,<names>`, `--model codex:opus=<id>`, `--remove`, and `--force` to replace same-named agent it did not write. Flags add to what is installed; `--prune` also removes copies you did not select. No `--scope`: flags install into current project, prompts suggest user-wide.
 
 Project install copies agents into project's `.claude/agents/`, `.codex/agents/` and `.cursor/agents/`, keeps them out of Git through `.git/info/exclude`, lists them in `.worktreeinclude` so Claude Code worktrees get them too. User-wide install writes to `~/.claude/agents`, `~/.codex/agents` and `~/.cursor/agents` (or `CLAUDE_CONFIG_DIR` and `CODEX_HOME`). Lane agents below install per project only.
 
@@ -88,8 +88,8 @@ Grunt needs `pi` on `PATH` with ready provider. Builders and hall-monitor need i
 ```sh
 python3 scripts/build_agents.py          # write factory/codex and factory/cursor
 python3 scripts/build_agents.py --check  # CI: copies are current and valid
-python3 skills/agent-setup/scripts/test_install.py
-python3 skills/agent-setup/scripts/test_catalog.py
+python3 skills/setup-agents/scripts/test_install.py
+python3 skills/setup-agents/scripts/test_catalog.py
 ```
 
 See [pending work](tasks/todo.md) and [factory research](docs/research/agent-factory-patterns.md) for design background.
