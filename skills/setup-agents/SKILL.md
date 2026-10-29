@@ -1,11 +1,11 @@
 ---
-name: agent-setup
+name: setup-agents
 description: Install, refresh, or remove the packaged agents for Claude Code, Codex, and Cursor. The planner, grunt, builder, reviewer, hall-monitor, git-janitor, and comment-janitor lane agents go in one project; the engineering catalog of specialist agents goes in one project or user-wide.
 disable-model-invocation: true
 argument-hint: "[remove] [path]"
 ---
 
-# Agent setup
+# Set up agents
 
 Copy the packaged agents into a project, or the catalog into the user-wide folders. A person at a terminal can run `python3 scripts/install.py` from this skill's directory with no flags and answer its questions: where, which tools, a multi-select of agents, and the catalog models. The steps below drive the same script with flags, because a session cannot answer those prompts.
 
