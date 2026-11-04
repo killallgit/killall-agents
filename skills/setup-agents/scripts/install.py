@@ -18,7 +18,9 @@ import picker
 
 FACTORY = Path(__file__).resolve().parents[3] / "factory"
 VERSION = json.loads((FACTORY.parent / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))["version"]
-ROLES = ("planner", "grunt", "builder", "reviewer", "hall-monitor", "git-janitor", "git-janitor-investigator", "comment-janitor")
+ROLES = ("planner", "grunt", "builder", "reviewer", "git-janitor", "git-janitor-investigator", "comment-janitor")
+# Folded into another agent; copies we wrote earlier are removed on the next run.
+RETIRED = ("hall-monitor",)
 NAMES = {"claude": "Claude Code", "codex": "Codex", "cursor": "Cursor"}
 # The last marker is agent-setup 1.x output, which these copies replace.
 MARKERS = ("<!-- killall-agents -->", "# killall-agents\n")
@@ -35,7 +37,7 @@ HOMES = {"claude": "CLAUDE_CONFIG_DIR", "codex": "CODEX_HOME", "cursor": None}
 @functools.cache
 def known() -> frozenset[str]:
     """The file stems this script writes today."""
-    return frozenset(ROLES) | {agent.slug for agent in catalog.load()}
+    return frozenset(ROLES) | set(RETIRED) | {agent.slug for agent in catalog.load()}
 
 
 def ours(path: Path) -> bool:
@@ -145,7 +147,7 @@ def installed(scope: str, dest: Path) -> tuple[set[str], set[str], set[str]]:
             if ours(path):
                 hosts.add(host)
                 stems.add(path.stem)
-    return hosts, stems & set(ROLES), stems - set(ROLES)
+    return hosts, stems & set(ROLES), stems - set(ROLES) - set(RETIRED)
 
 
 def ask_choices(agents: list[catalog.Agent], dest: Path | None) -> Choices:
@@ -208,7 +210,7 @@ def install(choices: Choices, dest: Path, agents: list[catalog.Agent]) -> str:
     folders = [agents_dir(scope, dest, host) for host in NAMES]
     for folder in (*folders, *([dest / ENTRIES["cursor"].parent] if project else [])):
         for path in sorted(folder.glob("*")):
-            if path not in copies and ours(path) and (choices.prune or choices.remove or path.stem not in known()):
+            if path not in copies and ours(path) and (choices.prune or choices.remove or path.stem in RETIRED or path.stem not in known()):
                 path.unlink()
     for path, content in copies.items():
         path.parent.mkdir(parents=True, exist_ok=True)

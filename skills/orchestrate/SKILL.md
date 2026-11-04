@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Project-manager loop for the top-level session in a project that has the planner, grunt, builder, reviewer, and hall-monitor agents. Gets a lane plan from the planner, runs lanes in git worktrees one at a time, and has each checked. Use when asked to run a spec or plan across these agents.
+description: Project-manager loop for the top-level session in a project that has the planner, grunt, builder, and reviewer agents. Gets a lane plan from the planner, runs lanes in git worktrees one at a time, and has each checked. Use when asked to run a spec or plan across these agents.
 ---
 
 # Orchestrate
@@ -9,7 +9,7 @@ You are the project manager. The `planner` decides the lanes; you run them and r
 
 - `grunt`: a task that fits a 64K-token context, such as a git update, a command or test run, or a small edit. It runs on a cheaper local model. Give it the directory and the done condition. A reviewer checks its code edits. When it returns `grunt unavailable`, give the task to a builder.
 - `builder`: larger implementation, one lane per builder, each in its own worktree.
-- `reviewer`: verifies behavior. `hall-monitor`: a quick check of the changes against the rules. Send all review and audit work to these two, never to a general-purpose agent.
+- `reviewer`: verifies behavior and checks the changes against the rules. Send all review and audit work to it, never to a general-purpose agent.
 
 ## Autonomy
 
@@ -34,11 +34,11 @@ Quote them into every brief. Ask when the gate is unclear. Without repository ru
 4. Assign each lane a branch and absolute worktree path. Its builder creates them from the default branch, or from its prerequisite's branch for a dependent lane.
 5. Run one lane at a time. Run lanes together only when the plan marks them parallel, and then give each brief an isolation line naming its own database, port, or cache. Give a `risky` lane `model: opus` on the builder.
 6. Require the builder's gate result and revert check before starting reviews.
-7. Start its `reviewer`, and its `hall-monitor` unless the lane is prose-only, with the plan, acceptance checks, gate, branch, and worktree path, without the builder's reasoning.
-8. Send the reviewer's BLOCKING findings and hall-monitor's blocking rows to the same builder (`SendMessage` in Claude Code, loaded with ToolSearch), or to a new builder with the original brief, last report, and findings. Repeat step 6, then rerun only the checkers that returned them. Do not send NOTEs or advisory rows back; list them for the user. After two rounds with blocking findings left, stop the lane for the user.
-9. Ready means the gate passed, reviewer PASS, and no blocking hall-monitor row. Only the first lane that needs it edits a shared file such as `CHANGELOG.md`; add the others' entries when you integrate. When the user asks, have a builder integrate ready lanes onto the default branch, one at a time. Push only when asked.
+7. Start its `reviewer` with the plan, acceptance checks, gate, branch, and worktree path, without the builder's reasoning.
+8. Send the reviewer's BLOCKING findings to the same builder (`SendMessage` in Claude Code, loaded with ToolSearch), or to a new builder with the original brief, last report, and findings. Repeat step 6, then rerun the reviewer. Do not send NOTEs back; list them for the user. After two rounds with blocking findings left, stop the lane for the user.
+9. Ready means the gate passed and the reviewer returned PASS. Only the first lane that needs it edits a shared file such as `CHANGELOG.md`; add the others' entries when you integrate. When the user asks, have a builder integrate ready lanes onto the default branch, one at a time. Push only when asked.
 
-When hall-monitor returns `rules unavailable`, stop starting hall-monitors, tell the user once, and ask whether a reviewer PASS alone makes a lane ready.
+When the reviewer's Evidence says `Rules: not checked`, tell the user once and ask whether a reviewer PASS without the rules check makes a lane ready.
 
 ## A brief contains
 
@@ -50,9 +50,9 @@ A builder's report is a claim. Assess the reviewer's diff evidence against the f
 
 ## Report
 
-- **Verdict**: per lane, its commit, the reviewer's verdict, hall-monitor's result, and whether it holds.
+- **Verdict**: per lane, its commit, the reviewer's verdict, and whether it holds.
 - **Verified**: who ran each check and its result.
-- **Not done**: work left out, blocked, or left for a person, and why. Include NOTEs, advisory rows, and builders' Noticed items.
+- **Not done**: work left out, blocked, or left for a person, and why. Include NOTEs and builders' Noticed items.
 - **Next**: the next action, or the decision you need.
 
 Stop and ask the user when a lane needs a decision only they can make: a contract conflict, an ambiguous acceptance check, a choice between designs such as a timeout or fallback (including in a fix round), or a destructive or outward-facing step.

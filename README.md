@@ -50,7 +50,6 @@ Project install copies agents into project's `.claude/agents/`, `.codex/agents/`
 | `grunt` | Relays task fitting 64K tokens to local [Pi](https://github.com/earendil-works/pi) agent | Haiku / low | `gpt-6-luna` / low |
 | `builder` | Implements one lane in own worktree | Sonnet / medium | `gpt-6.1-sol` / medium |
 | `reviewer` | Checks lane behavior, runs gate independently | Sonnet / high | `gpt-6.1-sol` / high |
-| `hall-monitor` | Quick check of lane changes against `follow-the-rules`; read-only | Sonnet / low | `gpt-6.1-sol` / low |
 
 Claude Code also gets three utility agents. No Codex or Cursor copy.
 
@@ -77,9 +76,9 @@ Twenty-four specialist agents in [`factory/catalog/`](factory/catalog/), one sou
 
 "Reads only" agents get no `Edit` or `Write` in Claude Code, read-only sandbox in Codex; `incident-response-commander` and `network-engineer` also get no `Bash`. Other reads-only agents keep `Bash` in Claude Code, so only Codex and Cursor enforce read-only for them. Catalog adapted from [agency-agents](https://github.com/msitarzewski/agency-agents) (MIT, copy in [`factory/catalog/LICENSE`](factory/catalog/LICENSE)) with persona, memory, metrics sections and most sample code removed, cutting set from about 315 KB to under 200 KB. Edit source file, next install picks it up.
 
-Cursor agents inherit session model. Ask top-level session to use [`orchestrate`](skills/orchestrate/SKILL.md) skill to run a spec. Skill is project-manager loop: plan with planner, run lanes with grunt and builders, check with reviewer and hall-monitor. Agents read gate, branch, worktree rules from project's own `AGENTS.md`.
+Cursor agents inherit session model. Ask top-level session to use [`orchestrate`](skills/orchestrate/SKILL.md) skill to run a spec. Skill is project-manager loop: plan with planner, run lanes with grunt and builders, check with reviewer. Agents read gate, branch, worktree rules from project's own `AGENTS.md`.
 
-Grunt needs `pi` on `PATH` with ready provider. Builders and hall-monitor need included `follow-the-rules` skill.
+Grunt needs `pi` on `PATH` with ready provider. Builders and reviewers need included `follow-the-rules` skill.
 
 ## Development
 
@@ -92,4 +91,4 @@ python3 skills/setup-agents/scripts/test_install.py
 python3 skills/setup-agents/scripts/test_catalog.py
 ```
 
-See [pending work](tasks/todo.md) and [factory research](docs/research/agent-factory-patterns.md) for design background.
+See [pending work](tasks/todo.md).

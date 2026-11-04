@@ -56,6 +56,10 @@ def main() -> None:
         status = subprocess.run(["git", "-C", str(repo), "status", "--porcelain", "--untracked-files=all"], capture_output=True, text=True).stdout
         assert status == "?? .claude/agents/mine.md\n?? .codex/config.toml\n?? CLAUDE.local.md\n", status
 
+        (repo / ".claude/agents/hall-monitor.md").write_text("old\n\n<!-- killall-agents -->\n")
+        assert run(repo).returncode == 0
+        assert not (repo / ".claude/agents/hall-monitor.md").exists(), "a retired agent stays"
+
         assert run(repo, "--hosts", "claude").returncode == 0
         assert (repo / ".codex/agents/planner.toml").is_file(), "a run without --prune keeps the other hosts' copies"
         assert run(repo, "--hosts", "claude", "--prune").returncode == 0
