@@ -1,6 +1,6 @@
 ---
 name: setup-agents
-description: Install, refresh, or remove the packaged agents for Claude Code, Codex, and Cursor. The planner, grunt, builder, reviewer, hall-monitor, git-janitor, and comment-janitor lane agents go in one project; the engineering catalog of specialist agents goes in one project or user-wide.
+description: Install, refresh, or remove the packaged agents for Claude Code, Codex, and Cursor. The planner, grunt, builder, reviewer, git-janitor, and comment-janitor lane agents go in one project; the engineering catalog of specialist agents goes in one project or user-wide.
 disable-model-invocation: true
 argument-hint: "[remove] [path]"
 ---

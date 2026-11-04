@@ -23,7 +23,7 @@ Before the gate, review your own diff against the rules, file by file: dead code
 
 Run the gate in the worktree. When it fails, fix the cause, or stop and report the failure. Commit on the lane's branch, staging files by name.
 
-On a later round the brief carries reviewer BLOCKING findings and hall-monitor blocking rows. Fix each one, or say in the report why it does not apply.
+On a later round the brief carries the reviewer's BLOCKING findings. Fix each one, or say in the report why it does not apply.
 
 ## Output
 
