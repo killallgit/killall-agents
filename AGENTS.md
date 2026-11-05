@@ -1,16 +1,14 @@
 # killall-agents
 
-Public agent catalog and per-project agents for Claude Code, Codex, and Cursor. Keep credentials, machine-specific settings and runtime state out of this repository.
+Public lane agents and workflow skills for Claude Code, Codex, and opencode. Keep credentials, machine-specific settings and runtime state out of this repository.
 
-The project agents' source is `factory/claude/`; `scripts/build_agents.py` writes the Codex and Cursor copies beside it (the janitor agents are Claude-only and have none), and the per-host Codex models live in that script. `skills/setup-agents/scripts/install.py` copies `factory/` into one project, and installs the engineering catalog in `factory/catalog/` (one source file per agent, rendered per host by `catalog.py`) into a project or the user-wide folders. The orchestrator is the `orchestrate` skill, not an agent. Keep the `<!-- killall-agents -->` / `# killall-agents` ownership markers stable.
+The agents' source is `factory/<name>.md` in Claude Code's format, with each tool's model in `factory/models.toml`. `skills/setup-agents/scripts/install.py` renders one file per tool (Claude Code, Codex, opencode) into a project. The orchestrator is the `orchestrate` skill, not an agent. Keep the `<!-- killall-agents -->` / `# killall-agents` ownership markers stable.
 
 Run from the repository root:
 
 ```sh
-python3 scripts/build_agents.py --check
 python3 skills/setup-agents/scripts/test_install.py
-python3 skills/setup-agents/scripts/test_catalog.py
-python3 skills/wrap-up/scripts/test_wrap_up.py
+python3 scripts/test_release.py
 git diff --check
 ```
 

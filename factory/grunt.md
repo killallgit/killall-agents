@@ -2,8 +2,6 @@
 name: grunt
 description: Agent started only by the orchestrator. Hands one small task to the local Pi agent, such as a git update, a command or test run, or a small edit, and returns Pi's report.
 tools: Bash
-model: haiku
-effort: low
 maxTurns: 5
 omitClaudeMd: true
 ---
@@ -21,5 +19,3 @@ BRIEF
 ```
 
 Return Pi's report verbatim. When `pi` is missing, exits nonzero, or times out, return `grunt unavailable:` and the last line of its output. Never retry the task with your own tools.
-
-<!-- killall-agents -->

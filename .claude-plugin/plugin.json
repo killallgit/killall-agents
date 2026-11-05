@@ -1,7 +1,7 @@
 {
   "name": "killall-agents",
-  "description": "Killallgit agent catalog and per-project agents",
-  "version": "2.8.0",
+  "description": "Killallgit lane agents and workflow skills",
+  "version": "2.7.0",
   "author": {
     "name": "archae0pteryx"
   },
