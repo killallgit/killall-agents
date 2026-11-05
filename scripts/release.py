@@ -27,10 +27,15 @@ def bump_version(current: str, level: str) -> str:
 
 
 def read_version(work: Path) -> str:
-    found = VERSION_LINE.search((work / MANIFESTS[0]).read_text(encoding="utf-8"))
-    if found is None:
-        raise SystemExit(f"no version in {MANIFESTS[0]}")
-    return found.group(2)
+    versions = {}
+    for manifest in MANIFESTS:
+        found = VERSION_LINE.search((work / manifest).read_text(encoding="utf-8"))
+        if found is None:
+            raise SystemExit(f"no version in {manifest}")
+        versions[manifest] = found.group(2)
+    if len(set(versions.values())) != 1:
+        raise SystemExit(f"manifests disagree: {versions}")
+    return next(iter(versions.values()))
 
 
 def write_version(work: Path, version: str) -> None:

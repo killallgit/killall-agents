@@ -13,8 +13,7 @@ VERSION = json.loads((PLUGIN / ".claude-plugin/plugin.json").read_text(encoding=
 TOOLS = ("claude", "codex", "opencode")
 MARKDOWN_MARK = "<!-- killall-agents -->"
 TOML_MARK = "# killall-agents"
-# Written by earlier versions, or for a tool no longer supported: removed on every run.
-RETIRED_AGENTS = ("hall-monitor", "git-janitor", "git-janitor-investigator", "comment-janitor")
+# Cursor was supported before; its copies are still removed on every run.
 RETIRED_TOOLS = ("cursor",)
 BLOCK = re.compile(r"^# killall-agents:start.*?# killall-agents:end\n\n?", re.MULTILINE | re.DOTALL)
 
@@ -40,10 +39,10 @@ def for_codex(meta: dict[str, str], body: str, pin: str) -> str:
     if "'''" in body:
         raise SystemExit(f"{meta['name']} contains ''' and cannot be a TOML literal")
     model, effort = model_and_effort(pin)
+    effort_line = f"model_reasoning_effort = {json.dumps(effort)}\n" if effort else ""
     return (
         f"{TOML_MARK}\nname = {json.dumps(meta['name'])}\ndescription = {json.dumps(meta['description'], ensure_ascii=False)}\n"
-        f"model = {json.dumps(model)}\nmodel_reasoning_effort = {json.dumps(effort)}\n"
-        f"developer_instructions = '''\n{body}'''\n"
+        f"model = {json.dumps(model)}\n{effort_line}developer_instructions = '''\n{body}'''\n"
     )
 
 
@@ -66,11 +65,12 @@ def agent_file(root: Path, tool: str, name: str) -> Path:
     return root / f".{tool}" / "agents" / f"{name}{RENDER[tool][1]}"
 
 
-def ours(path: Path, names: set[str]) -> bool:
-    """A marker alone is not enough: a file of someone else's that mentions it must keep its own name to be spared."""
-    if not path.is_file() or path.stem not in names:
+def ours(path: Path) -> bool:
+    """Only a file that starts (TOML) or ends (markdown) with our marker; one that merely mentions it is someone else's."""
+    if not path.is_file():
         return False
-    return any(mark in path.read_text(encoding="utf-8", errors="ignore") for mark in (MARKDOWN_MARK, TOML_MARK))
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    return text.startswith(TOML_MARK + "\n") or text.endswith(MARKDOWN_MARK + "\n")
 
 
 def set_block(path: Path, body: str) -> None:
@@ -92,11 +92,11 @@ def keep_out_of_git(root: Path, paths: list[Path]) -> None:
     set_block(root / ".worktreeinclude", listed)
 
 
-def remove_ours(root: Path, names: set[str]) -> None:
+def remove_ours(root: Path) -> None:
     for tool in (*TOOLS, *RETIRED_TOOLS):
         folder = root / f".{tool}" / "agents"
         for path in folder.glob("*"):
-            if ours(path, names):
+            if ours(path):
                 path.unlink()
         for empty in (folder, folder.parent):
             if empty.is_dir() and not any(empty.iterdir()):
@@ -105,12 +105,11 @@ def remove_ours(root: Path, names: set[str]) -> None:
 
 def install(root: Path, tools: list[str], force: bool) -> dict[Path, str]:
     found, pins = sources(), models()
-    names = set(found) | set(RETIRED_AGENTS)
     copies = {agent_file(root, tool, name): RENDER[tool][0](*found[name], pins[name][tool]) for tool in tools for name in found}
-    foreign = [str(path) for path in copies if path.exists() and not ours(path, names)]
+    foreign = [str(path) for path in copies if path.exists() and not ours(path)]
     if foreign and not force:
         raise SystemExit("not written by killall-agents, rerun with --force to replace: " + ", ".join(foreign))
-    remove_ours(root, names)
+    remove_ours(root)
     for path, content in copies.items():
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
@@ -130,18 +129,22 @@ def project_root(given: Path | None) -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dest", type=Path, help="the project's git root (default: the current repository)")
-    parser.add_argument("--tools", default=",".join(TOOLS), help="comma-separated: claude, codex, opencode (default: all)")
+    parser.add_argument("--tools", default=",".join(TOOLS), help="comma-separated: claude, codex, opencode (default: all); copies for tools not named are removed")
     parser.add_argument("--remove", action="store_true", help="remove the agents this script wrote")
     parser.add_argument("--force", action="store_true", help="replace a same-named agent this script did not write")
     args = parser.parse_args()
     root = project_root(args.dest)
     if root == Path.home():
         raise SystemExit(f"{root} is not a project; run setup in a project's git root")
+    if subprocess.run(["git", "-C", str(root), "rev-parse", "--git-dir"], capture_output=True).returncode:
+        raise SystemExit(f"{root} is not a Git repository")
     tools = [tool for tool in args.tools.split(",") if tool]
+    if not tools:
+        raise SystemExit("--tools names no tool; use --remove to remove the agents")
     if unknown := [tool for tool in tools if tool not in TOOLS]:
         raise SystemExit(f"unknown tool: {', '.join(unknown)}")
     if args.remove:
-        remove_ours(root, set(sources()) | set(RETIRED_AGENTS))
+        remove_ours(root)
         keep_out_of_git(root, [])
         print(f"Agents removed from {root}")
         return

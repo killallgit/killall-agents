@@ -19,12 +19,21 @@ def main() -> None:
 
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
+        manifest_text = '{\n  "name": "x",\n  "version": "2.7.0",\n  "description": "keep"\n}\n'
         for manifest in release.MANIFESTS:
             (work / manifest).parent.mkdir(exist_ok=True)
-            (work / manifest).write_text('{\n  "name": "x",\n  "version": "2.7.0",\n  "description": "keep"\n}\n')
+            (work / manifest).write_text(manifest_text)
         assert release.read_version(work) == "2.7.0"
+        (work / release.MANIFESTS[1]).write_text(manifest_text.replace("2.7.0", "2.0.0"))
+        try:
+            release.read_version(work)
+        except SystemExit:
+            pass
+        else:
+            raise AssertionError("manifests that disagree were accepted")
+        (work / release.MANIFESTS[1]).write_text(manifest_text)
         release.write_version(work, "3.0.0")
-        assert all('"version": "3.0.0"' in (work / m).read_text() and '"description": "keep"' in (work / m).read_text() for m in release.MANIFESTS)
+        assert release.read_version(work) == "3.0.0" and all('"version": "3.0.0"' in (work / m).read_text() and '"description": "keep"' in (work / m).read_text() for m in release.MANIFESTS)
 
     steps = release.publish_steps("3.0.0")
     assert steps[1][-1] == "chore: release v3.0.0" and steps[3][-3:] == ["origin", "HEAD:main", "v3.0.0"] and "--atomic" in steps[3]
