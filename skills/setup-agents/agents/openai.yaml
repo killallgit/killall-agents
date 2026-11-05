@@ -1,5 +1,5 @@
 interface:
   display_name: "Set up agents"
-  short_description: "Install or remove the packaged lane agents in a project and the engineering agent catalog in a project or user-wide."
+  short_description: "Install or remove the planner, grunt, builder, and reviewer lane agents in a project."
 policy:
   allow_implicit_invocation: false

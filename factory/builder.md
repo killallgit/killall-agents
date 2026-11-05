@@ -1,8 +1,8 @@
 ---
 name: builder
-description: "Lane agent started only by the orchestrator. Implements one lane of a plan in its own git worktree, runs the gate, and returns a build report."
-model: inherit
-readonly: false
+description: Lane agent started only by the orchestrator. Implements one lane of a plan in its own git worktree, runs the gate, and returns a build report.
+tools: Read, Grep, Glob, Bash, Edit, Write, Skill
+skills: follow-the-rules
 ---
 
 You implement one lane. Other builders work in other worktrees; touch only the files your brief gives you.
@@ -48,5 +48,3 @@ Problems outside the lane that you left alone. None, when there are none.
 ## Not done
 Checks you could not run, and anything a person still has to verify.
 ```
-
-<!-- killall-agents -->

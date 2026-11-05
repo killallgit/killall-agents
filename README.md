@@ -1,6 +1,6 @@
 # killall-agents
 
-Agent catalog + per-project agents for Claude Code, Codex, Cursor. Ordinary workflow skills live in [killall-skills](https://github.com/killallgit/killall-skills).
+Four lane agents and workflow skills for Claude Code, Codex and opencode. Ordinary workflow skills live in [killall-skills](https://github.com/killallgit/killall-skills).
 
 ## Install
 
@@ -18,77 +18,52 @@ codex plugin marketplace add killallgit/killall-agents
 codex plugin add killall-agents@killall-agents
 ```
 
-Cursor: install from `https://github.com/killallgit/killall-agents` in **Customize**.
-
 Skills CLI (setup and rules only):
 
 ```sh
 npx skills add killallgit/killall-agents
 ```
 
-Includes `setup-agents`, `orchestrate`, `wrap-up`, `follow-the-rules`.
+Includes `setup-agents`, `orchestrate`, `follow-the-rules`.
 
 ## Install agents
 
-Run installer in terminal, answer questions:
+From a project's git root:
 
 ```sh
-python3 skills/setup-agents/scripts/install.py
+python3 skills/setup-agents/scripts/install.py [--tools claude,codex,opencode] [--remove] [--force]
 ```
 
-Asks where agents go (user-wide or current project), which tools (Claude Code, Codex, Cursor), which agents from multi-select, then model for each catalog tier. Confirms before writing anything. Type `q` to quit. Rerun starts from what is already installed; prompts make folders match selection: remove copies it wrote that you deselected, keep every other file.
-
-In session, `/killall-agents:setup-agents` in Claude Code or `$setup-agents` in Codex runs same script with flags: `--scope user|project`, `--hosts claude,codex`, `--agents lanes,catalog,<names>`, `--model codex:opus=<id>`, `--remove`, and `--force` to replace same-named agent it did not write. Flags add to what is installed; `--prune` also removes copies you did not select. No `--scope`: flags install into current project, prompts suggest user-wide.
-
-Project install copies agents into project's `.claude/agents/`, `.codex/agents/` and `.cursor/agents/`, keeps them out of Git through `.git/info/exclude`, lists them in `.worktreeinclude` so Claude Code worktrees get them too. User-wide install writes to `~/.claude/agents`, `~/.codex/agents` and `~/.cursor/agents` (or `CLAUDE_CONFIG_DIR` and `CODEX_HOME`). Lane agents below install per project only.
+Writes one file per tool into `.claude/agents/`, `.codex/agents/` and `.opencode/agents/`, each with that tool's model from [`factory/models.toml`](factory/models.toml), so no agent inherits the session's model. Keeps the copies out of Git through `.git/info/exclude` and lists them in `.worktreeinclude` so Claude Code worktrees get them. Rerun to refresh; it removes copies from older versions and keeps every file it did not write. `--force` replaces a same-named agent it did not write. In session: `/killall-agents:setup-agents` in Claude Code or `$setup-agents` in Codex.
 
 ## Lane agents
 
-| Agent | Job | Claude model / effort | Codex model / effort |
-| --- | --- | --- | --- |
-| `planner` | Turns spec into lanes, contracts, acceptance checks; read-only | Opus / high | `gpt-6-astra` / high |
-| `grunt` | Relays task fitting 64K tokens to local [Pi](https://github.com/earendil-works/pi) agent | Haiku / low | `gpt-6-luna` / low |
-| `builder` | Implements one lane in own worktree | Sonnet / medium | `gpt-6.1-sol` / medium |
-| `reviewer` | Checks lane behavior, runs gate independently | Sonnet / high | `gpt-6.1-sol` / high |
+Edit [`factory/models.toml`](factory/models.toml) to change a model, then rerun the installer.
 
-Claude Code also gets three utility agents. No Codex or Cursor copy.
+| Agent | Job | Claude | Codex | opencode |
+| --- | --- | --- | --- | --- |
+| `planner` | Turns spec into lanes, contracts, acceptance checks; read-only | Opus / high | `gpt-6-astra` / high | Opus |
+| `grunt` | Relays task fitting 64K tokens to local [Pi](https://github.com/earendil-works/pi) agent | Haiku / low | `gpt-6-luna` / low | Haiku |
+| `builder` | Implements one lane in own worktree | Sonnet / medium | `gpt-6.1-sol` / medium | Sonnet |
+| `reviewer` | Checks lane behavior, `follow-the-rules` and comments; runs gate independently | Sonnet / high | `gpt-6.1-sol` / high | Sonnet |
 
-| Agent | Purpose |
-| --- | --- |
-| `git-janitor` | Haiku background runner for [`wrap-up`](skills/wrap-up/SKILL.md) skill: runs its script, returns table, or the one roadblock needing you |
-| `git-janitor-investigator` | Collects read-only branch/worktree evidence for janitor |
-| `comment-janitor` | Reviews changed comments for useful intent |
+Installing plugin adds no agents. To land finished work, use `/lets-finish` from [killall-skills](https://github.com/killallgit/killall-skills).
 
-Installing plugin adds no agents. Run `wrap-up` skill after PR lands: confirms work merged and nothing stranded, updates main checkout, grooms beads, prunes merged worktrees and branches, asks only about what is left.
+opencode agents run as subagents with the model pinned; the `tools` restriction is Claude Code only.
 
-## Engineering catalog
-
-Twenty-four specialist agents in [`factory/catalog/`](factory/catalog/), one source file each. Installer fills in each tool's format: Claude Code gets `model`, `effort`, `tools`, `maxTurns`; Codex gets `model`, `model_reasoning_effort` and, for agents that only read, `sandbox_mode = "read-only"`; Cursor gets `readonly`.
-| Agents | Access | Claude model / effort | Codex model / effort |
-| --- | --- | --- | --- |
-| `autonomous-optimization-architect`, `backend-architect`, `incident-response-commander`, `multi-agent-systems-architect`, `software-architect` | Reads only | Opus / high | `gpt-6-astra` / high |
-| `privacy-engineer` | Edits files | Opus / high | `gpt-6-astra` / high |
-| `code-reviewer`, `network-engineer`, `sre` | Reads only | Sonnet / high | `gpt-6.1-sol` / high |
-| `knowledge-graph-engineer`, `rust-refactoring-specialist`, `search-relevance-engineer` | Edits files | Sonnet / high | `gpt-6.1-sol` / high |
-| `desktop-app-engineer`, `developer-tooling-engineer`, `devops-automator`, `frontend-developer`, `it-service-manager`, `minimal-change-engineer`, `mobile-app-builder`, `platform-engineer`, `senior-developer`, `technical-writer` | Edits files | Sonnet / medium | `gpt-6.1-sol` / medium |
-| `codebase-onboarding-engineer` | Reads only | Sonnet / low | `gpt-6.1-sol` / low |
-| `git-workflow-master` | Edits files | Sonnet / low | `gpt-6.1-sol` / low |
-
-"Reads only" agents get no `Edit` or `Write` in Claude Code, read-only sandbox in Codex; `incident-response-commander` and `network-engineer` also get no `Bash`. Other reads-only agents keep `Bash` in Claude Code, so only Codex and Cursor enforce read-only for them. Catalog adapted from [agency-agents](https://github.com/msitarzewski/agency-agents) (MIT, copy in [`factory/catalog/LICENSE`](factory/catalog/LICENSE)) with persona, memory, metrics sections and most sample code removed, cutting set from about 315 KB to under 200 KB. Edit source file, next install picks it up.
-
-Cursor agents inherit session model. Ask top-level session to use [`orchestrate`](skills/orchestrate/SKILL.md) skill to run a spec. Skill is project-manager loop: plan with planner, run lanes with grunt and builders, check with reviewer. Agents read gate, branch, worktree rules from project's own `AGENTS.md`.
+Ask top-level session to use [`orchestrate`](skills/orchestrate/SKILL.md) skill to run a spec. Skill is project-manager loop: plan with planner, run lanes with grunt and builders, check with reviewer. Agents read gate, branch, worktree rules from project's own `AGENTS.md`.
 
 Grunt needs `pi` on `PATH` with ready provider. Builders and reviewers need included `follow-the-rules` skill.
 
 ## Development
 
-`factory/claude/` is source. After editing, regenerate Codex and Cursor copies:
+`factory/<name>.md` is source, in Claude Code's format. `factory/models.toml` maps each agent to a model per tool. The installer renders both into each tool's file at install time.
 
 ```sh
-python3 scripts/build_agents.py          # write factory/codex and factory/cursor
-python3 scripts/build_agents.py --check  # CI: copies are current and valid
 python3 skills/setup-agents/scripts/test_install.py
-python3 skills/setup-agents/scripts/test_catalog.py
+python3 scripts/test_release.py
 ```
+
+Release with `task tag:patch`, `task tag:minor` or `task tag:major`: it tests `origin/main`, bumps the version in all three plugin manifests, tags it, and pushes.
 
 See [pending work](tasks/todo.md).

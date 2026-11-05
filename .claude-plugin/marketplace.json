@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "killall-agents",
-  "description": "Killallgit agent catalog for Claude Code.",
+  "description": "Killallgit lane agents and workflow skills for Claude Code.",
   "owner": {
     "name": "archae0pteryx",
     "url": "https://github.com/killallgit"
@@ -10,7 +10,7 @@
     {
       "name": "killall-agents",
       "source": "./",
-      "description": "Agent catalog, per-project agents, and follow-the-rules.",
+      "description": "Lane agents, workflow skills, and follow-the-rules.",
       "category": "workflow",
       "homepage": "https://github.com/killallgit/killall-agents"
     }

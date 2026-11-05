@@ -1,0 +1,23 @@
+version: "3"
+
+tasks:
+  test:
+    desc: Run the repository checks
+    cmds:
+      - python3 skills/setup-agents/scripts/test_install.py
+      - python3 scripts/test_release.py
+
+  tag:patch:
+    desc: Test origin/main, bump the patch version, tag it, and push
+    cmds:
+      - python3 scripts/release.py patch
+
+  tag:minor:
+    desc: Test origin/main, bump the minor version, tag it, and push
+    cmds:
+      - python3 scripts/release.py minor
+
+  tag:major:
+    desc: Test origin/main, bump the major version, tag it, and push
+    cmds:
+      - python3 scripts/release.py major

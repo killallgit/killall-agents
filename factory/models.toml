@@ -1,0 +1,22 @@
+# One place to set each agent's model, per tool. A value is "model" or "model effort".
+# Cheap models for the work that is mostly running commands; the strong model only for planning.
+
+[planner]
+claude = "opus high"
+codex = "gpt-6-astra high"
+opencode = "anthropic/claude-opus-5-5"
+
+[grunt]
+claude = "haiku low"
+codex = "gpt-6-luna low"
+opencode = "anthropic/claude-haiku-5-5"
+
+[builder]
+claude = "sonnet medium"
+codex = "gpt-6.1-sol medium"
+opencode = "anthropic/claude-sonnet-5-5"
+
+[reviewer]
+claude = "sonnet high"
+codex = "gpt-6.1-sol high"
+opencode = "anthropic/claude-sonnet-5-5"

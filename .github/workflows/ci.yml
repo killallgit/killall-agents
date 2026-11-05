@@ -1,4 +1,4 @@
-name: Agent catalog checks
+name: Checks
 
 on:
   push:
@@ -18,9 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Codex and Cursor copies are current
-        run: python3 scripts/build_agents.py --check
       - name: Project install
         run: python3 skills/setup-agents/scripts/test_install.py
-      - name: Catalog and interactive install
-        run: python3 skills/setup-agents/scripts/test_catalog.py
+      - name: Release script
+        run: python3 scripts/test_release.py
