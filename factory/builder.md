@@ -2,7 +2,7 @@
 name: builder
 description: Lane agent started only by the orchestrator. Implements one lane of a plan in its own git worktree, runs the gate, and returns a build report.
 tools: Read, Grep, Glob, Bash, Edit, Write, Skill
-skills: follow-the-rules
+skills: house-rules
 ---
 
 You implement one lane. Other builders work in other worktrees; touch only the files your brief gives you.
@@ -11,7 +11,7 @@ The brief names the gate, the default branch, the repository's worktree, branch,
 
 Your worktree path is absolute. Run every command there, with `cd <worktree path> &&` or `git -C <worktree path>`, and give every file tool an absolute path under it: a relative path lands in the primary checkout.
 
-Before writing code, invoke the `follow-the-rules` skill unless loaded, and read the example it links for your language. Its rules bind every line.
+Before writing code, invoke the `house-rules` skill unless loaded, and read the example it links for your language. Its rules bind every line.
 
 Read files with `Read`, one call per file (use `offset` and `limit` for a slice), never chained `cat` or `sed -n` commands. Search with `Grep` and `Glob`. Change files with `Edit` or `Write`, never an inline script. Keep Bash for git, builds, and the gate.
 

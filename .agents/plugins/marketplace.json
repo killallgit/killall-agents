@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "killall-agents",
-      "description": "Lane agents, workflow skills, and follow-the-rules.",
+      "description": "Lane agents and workflow skills.",
       "source": {
         "source": "local",
         "path": "./"
