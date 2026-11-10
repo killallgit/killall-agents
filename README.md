@@ -24,7 +24,7 @@ Skills CLI (setup and rules only):
 npx skills add killallgit/killall-agents
 ```
 
-Includes `setup-agents`, `orchestrate`, `follow-the-rules`.
+Includes `setup-agents`, `orchestrate`.
 
 ## Install agents
 
@@ -45,7 +45,7 @@ Edit [`factory/models.toml`](factory/models.toml) to change a model, then rerun 
 | `planner` | Turns spec into lanes, contracts, acceptance checks; read-only | Opus / high | `gpt-6-astra` / high | Opus |
 | `grunt` | Relays task fitting 64K tokens to local [Pi](https://github.com/earendil-works/pi) agent | Haiku / low | `gpt-6-luna` / low | Haiku |
 | `builder` | Implements one lane in own worktree | Sonnet / medium | `gpt-6.1-sol` / medium | Sonnet |
-| `reviewer` | Checks lane behavior, `follow-the-rules` and comments; runs gate independently | Sonnet / high | `gpt-6.1-sol` / high | Sonnet |
+| `reviewer` | Checks lane behavior, `house-rules` and comments; runs gate independently | Sonnet / high | `gpt-6.1-sol` / high | Sonnet |
 
 Installing plugin adds no agents. To land finished work, use `/lets-finish` from [killall-skills](https://github.com/killallgit/killall-skills).
 
@@ -53,7 +53,7 @@ opencode agents run as subagents with the model pinned; the `tools` restriction 
 
 Ask top-level session to use [`orchestrate`](skills/orchestrate/SKILL.md) skill to run a spec. Skill is project-manager loop: plan with planner, run lanes with grunt and builders, check with reviewer. Agents read gate, branch, worktree rules from project's own `AGENTS.md`.
 
-Grunt needs `pi` on `PATH` with ready provider. Builders and reviewers need included `follow-the-rules` skill.
+Grunt needs `pi` on `PATH` with ready provider. Builders and reviewers need the `house-rules` skill from [killall-craft](https://github.com/killallgit/killall-craft) installed.
 
 ## Development
 

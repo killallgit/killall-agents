@@ -11,7 +11,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Killall Agents",
-    "shortDescription": "Lane agents, project setup, and bundled programming rules.",
+    "shortDescription": "Lane agents and project setup.",
     "developerName": "archae0pteryx",
     "category": "Productivity"
   }

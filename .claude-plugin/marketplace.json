@@ -10,7 +10,7 @@
     {
       "name": "killall-agents",
       "source": "./",
-      "description": "Lane agents, workflow skills, and follow-the-rules.",
+      "description": "Lane agents and workflow skills.",
       "category": "workflow",
       "homepage": "https://github.com/killallgit/killall-agents"
     }

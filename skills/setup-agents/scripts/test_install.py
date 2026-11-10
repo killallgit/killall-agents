@@ -78,7 +78,7 @@ def main() -> None:
         assert 'model = "gpt-6-astra"' in (repo / ".codex/agents/planner.toml").read_text()
         opencode = (repo / ".opencode/agents/planner.md").read_text()
         assert "model: anthropic/claude-opus-5-5\n" in opencode and "mode: subagent" in opencode
-        assert "\nskills: follow-the-rules\n" in (repo / ".claude/agents/builder.md").read_text()
+        assert "\nskills: house-rules\n" in (repo / ".claude/agents/builder.md").read_text()
         tomllib.loads((repo / ".codex/agents/reviewer.toml").read_text())
 
         assert (repo / ".claude/agents/mine.md").is_file(), "foreign agent removed"
